@@ -6,6 +6,18 @@ A personal portfolio prototype for investigating product feedback with source-li
 
 The browser demo works without an API key. It uses an **extractive retrieval baseline**, not an LLM. The optional local server adds an OpenAI Responses API workflow with structured answers and citation validation. Live model behavior has not yet been tested with a real API key.
 
+## Start here: three practical walkthroughs
+
+This is Karan Kapoor's personal AI product portfolio, developed with AI coding assistance. Each walkthrough connects a product decision to a working artifact and inspectable evidence.
+
+| Question to explore | Try it | Inspect the evidence |
+| --- | --- | --- |
+| Why can aggregate latency worsen when both workload cohorts improve? | [Telemetry Lab](https://karan00023.github.io/feedback-lens/telemetry/) — switch between all, quick and deep workloads. | [Methods and synthetic results](https://karan00023.github.io/feedback-lens/telemetry/report.html). The 480 requests are generated fixtures; costs are hypothetical. |
+| Does a valid citation mean an answer is supported? | [Citation counterexample](https://karan00023.github.io/feedback-lens/research/citation-checks.html) — inspect two scripted claims that share a genuine quote. | [Offline evaluation harness](experiments/comparison/README.md). Structural validation and semantic review are separate; no live model ranking is claimed. |
+| What should a platform record when requests finish, fail or disconnect? | [Recorded local HTTP smoke run](docs/telemetry/local-smoke.json) — inspect 18 actual loopback requests over synthetic feedback. | [Bounded instrumentation](request-metrics.mjs) and [HTTP tests](tests/request-metrics.test.mjs). These are local service measurements, not production or model-inference latency. |
+
+[Browse the lab](https://karan00023.github.io/feedback-lens/lab/) · [Use the feedback investigation demo](https://karan00023.github.io/feedback-lens/) · [See contributions and review status](CONTRIBUTIONS.md)
+
 ## Applied AI lab extensions
 
 [Published technical studies](https://karan00023.github.io/feedback-lens/research/) include the synthetic telemetry report and a reproducible citation-validation counterexample. They are AI-assisted technical notes, not peer-reviewed papers. Run `npm run study:citations` to reproduce the latter.
