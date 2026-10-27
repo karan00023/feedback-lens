@@ -3,7 +3,7 @@ import {createRequestMetrics} from './request-metrics.mjs';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
-import {baseline,retrieve,validateAnswer} from './docs/engine.mjs';
+import {baseline,explainRetrieval,validateAnswer} from './docs/engine.mjs';
 
 const root=path.dirname(fileURLToPath(import.meta.url));
 const data=JSON.parse(await readFile(path.join(root,'docs/data/feedback.json'),'utf8'));
@@ -13,8 +13,8 @@ export function requestPayload(question,sources,model){
 }
 export async function liveAnswer(question,records,{key=process.env.OPENAI_API_KEY,model=process.env.OPENAI_MODEL,transport=fetch}={}){
   if(!key||!model) throw new Error('Live mode requires server-side OPENAI_API_KEY and OPENAI_MODEL.');
-  const sources=retrieve(question,records);
-  if(!sources.length) return {status:'insufficient_evidence',claims:[],sources,mode:'live',usage:null};
+  const {sources,...retrieval}=explainRetrieval(question,records);
+  if(!sources.length) return {status:'insufficient_evidence',claims:[],sources,retrieval,mode:'live',usage:null};
   const result=await transport('https://api.openai.com/v1/responses',{method:'POST',signal:AbortSignal.timeout(45000),headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify(requestPayload(question,sources,model))});
   if(!result.ok) throw new Error(`Model provider request failed (${result.status}).`);
   const raw=await result.json();
@@ -23,13 +23,24 @@ export async function liveAnswer(question,records,{key=process.env.OPENAI_API_KE
   if(parts.some(p=>p.type==='refusal')) throw new Error('The model declined this request.');
   const text=parts.filter(p=>p.type==='output_text').map(p=>p.text).join('');
   const answer=validateAnswer(JSON.parse(text),sources);
-  return {...answer,sources,mode:'live',model,usage:raw.usage?{input_tokens:raw.usage.input_tokens,output_tokens:raw.usage.output_tokens}:null};
+  return {...answer,sources,retrieval,mode:'live',model,usage:raw.usage?{input_tokens:raw.usage.input_tokens,output_tokens:raw.usage.output_tokens}:null};
+}
+const docsRoot=path.join(root,'docs');
+const TYPES={'.html':'text/html; charset=utf-8','.css':'text/css','.mjs':'text/javascript','.json':'application/json'};
+// Serves only files inside docs/ with an allowlisted extension; "/dir/" maps to its index.html.
+export function staticFile(pathname){
+  let decoded;try{decoded=decodeURIComponent(pathname);}catch{return null;}
+  if(decoded.includes('\0')) return null;
+  const relative=decoded.endsWith('/')?decoded+'index.html':decoded;
+  const file=path.resolve(docsRoot,'.'+relative);
+  if(!file.startsWith(docsRoot+path.sep)||!TYPES[path.extname(file)]) return null;
+  return file;
 }
 export function createServer({records=data,telemetryCapacity=200}={}){
   const metrics=createRequestMetrics({capacity:telemetryCapacity});
   let windowStart=Date.now(),calls=0;
   return http.createServer(async(req,res)=>{
-    const headers={'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Cache-Control':'no-store','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'"};
+    const headers={'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Cache-Control':'no-store','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'"};
     const send=(status,body)=>{res.writeHead(status,{...headers,'Content-Type':'application/json'});res.end(JSON.stringify(body));};
     const host=req.headers.host||'';
     if(!/^(localhost|127\.0\.0\.1):\d+$/.test(host)) return send(403,{error:'Local host only.'});
@@ -65,9 +76,8 @@ export function createServer({records=data,telemetryCapacity=200}={}){
       }catch(e){return send(502,{error:e instanceof SyntaxError?'Invalid JSON response.':e.message.includes('server-side')?e.message:'Answer unavailable. Check local configuration or provider availability.'});}
     }
     if(req.method!=='GET') return send(405,{error:'Method not allowed.'});
-    const files={'/':'index.html','/index.html':'index.html','/app.mjs':'app.mjs','/engine.mjs':'engine.mjs','/style.css':'style.css','/data/feedback.json':'data/feedback.json','/data/evaluation.json':'data/evaluation.json'};
-    const file=files[url.pathname];if(!file)return send(404,{error:'Not found.'});
-    try{const content=await readFile(path.join(root,'docs',file));const ext=path.extname(file);res.writeHead(200,{...headers,'Content-Type':ext==='.html'?'text/html; charset=utf-8':ext==='.css'?'text/css':ext==='.json'?'application/json':'text/javascript'});res.end(content);}catch{return send(404,{error:'File unavailable.'});}
+    const file=staticFile(url.pathname);if(!file)return send(404,{error:'Not found.'});
+    try{const content=await readFile(file);res.writeHead(200,{...headers,'Content-Type':TYPES[path.extname(file)]});res.end(content);}catch{return send(404,{error:'File unavailable.'});}
   });
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){

@@ -1,13 +1,141 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Feedback Lens, a portfolio prototype for evidence-backed product feedback analysis by Karan Kapoor."><title>Feedback Lens · Karan Kapoor</title><link rel="stylesheet" href="./style.css"><script type="module" src="./app.mjs"></script></head>
-<body><a class="skip" href="#main">Skip to workspace</a>
-<header><a class="brand" href="./"><span class="mark">f.</span> Feedback Lens <span class="version">/ prototype 01</span></a><nav><a href="lab/">AI lab</a><a href="#workspace">Workspace</a><a href="#evaluation">Evaluation</a><a id="source-link" href="https://github.com/karan00023/feedback-lens">Source ↗</a></nav></header>
-<main id="main"><section class="intro"><div><p class="eyebrow">A PRODUCT EXPERIMENT BY KARAN KAPOOR</p><h1>Find the signal.<br><span>Keep the evidence.</span></h1><p class="lede">Explore product feedback, ask a focused question, and follow every answer back to its source.</p></div><aside class="project-note"><span class="dot"></span><strong>Working prototype</strong><p>31 synthetic feedback records.<br>Rules-based themes. Cited answers.</p><p class="small">The hosted demo runs an extractive baseline. Live LLM mode is available through the local server.</p></aside></section>
-<section class="metrics" aria-label="Dataset overview"><div><span id="record-count">31</span><p>feedback records</p></div><div><span>6</span><p>product themes</p></div><div><span>3</span><p>feedback channels</p></div><div><span class="metric-word">Traceable</span><p>quotes linked to source records</p></div></section>
-<section id="workspace" class="workspace"><div class="section-title"><div><p class="eyebrow">01 / EXPLORE</p><h2>From feedback to a better question.</h2></div><label class="channel-label">Channel<select id="channel"><option value="all">All channels</option><option value="support">Support</option><option value="interview">Interviews</option><option value="survey">Surveys</option></select></label></div>
-<div class="workspace-grid"><aside class="themes"><h3>Product themes</h3><p class="small">Keyword rules, not learned clusters.</p><div id="theme-list"></div><button id="reset" class="text-button">Reset filters ↺</button></aside>
-<div class="records-panel"><div class="panel-top"><h3>Evidence library <span id="visible-count"></span></h3><label class="sr" for="search">Search feedback</label><input id="search" type="search" placeholder="Search the feedback…"></div><div id="records" aria-live="polite"></div></div>
-<aside class="ask-panel"><p class="eyebrow">02 / INVESTIGATE</p><h2>Ask the evidence.</h2><p class="small">Questions use the selected channel. Theme and text filters only narrow the library.</p><form id="question-form"><label for="question">Your question</label><textarea id="question" maxlength="500" rows="3" required placeholder="What breaks CSV export?"></textarea><div class="ask-actions"><select id="mode" aria-label="Answer mode"><option value="extractive">Extractive baseline</option><option value="live" disabled>Live LLM · local setup</option></select><button id="ask" type="submit">Investigate ↗</button></div></form><div class="examples"><button data-question="What breaks CSV export?">Export issues</button><button data-question="What permission issues affect private projects?">Access risks</button><button data-question="How much revenue did we make last quarter?">Try an unknown</button></div><div id="answer" aria-live="polite"><div class="answer-empty"><span>↗</span><h3>A useful answer starts with a source.</h3><p>Ask a question to see matching feedback. If the dataset cannot support it, the assistant should say so.</p></div></div></aside></div></section>
-<section id="evaluation" class="evaluation"><div><p class="eyebrow">03 / MEASURE</p><h2>Make the limits visible.</h2><p>A small diagnostic set checks retrieval and abstention. These results describe this synthetic sample, not production accuracy or user impact.</p><a class="text-button" href="./data/evaluation.json" download>Download evaluation report ↓</a></div><div id="eval-results" class="eval-grid"><p>Loading measured baseline results…</p></div></section>
-<section class="notes"><div><h3>What this demonstrates</h3><p>A conversational investigation workflow, source navigation, filterable feedback, shared retrieval logic, and reproducible evaluation.</p></div><div><h3>What comes next</h3><p>Validate a live model, add semantic retrieval, test with real reviewers, and compare task completion time. No customer adoption or business results are claimed.</p></div><div><h3>Built with assistance</h3><p>A personal portfolio prototype developed with AI coding assistance. Karan’s decisions, validation and changes are recorded in the repository.</p></div></section>
-</main><footer><span>Feedback Lens / Karan Kapoor</span><span>Synthetic data. Real implementation. Measured limits.</span></footer><div id="error" role="alert" hidden></div></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Feedback Lens, a portfolio prototype for evidence-backed product feedback investigation by Karan Kapoor.">
+  <title>Feedback Lens · Karan Kapoor</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#workspace">Skip to workspace</a>
+<header class="site-header">
+  <a class="brand" href="./"><span class="mark" aria-hidden="true">f.</span> Feedback Lens <span class="version">/ prototype 01</span></a>
+  <nav aria-label="Primary">
+    <a href="lab/">AI lab</a>
+    <a href="#workspace">Workspace</a>
+    <a href="#evaluation">Evaluation</a>
+    <a href="https://github.com/karan00023/feedback-lens">Source ↗</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="intro">
+    <div>
+      <p class="eyebrow">A PRODUCT EXPERIMENT BY KARAN KAPOOR</p>
+      <h1>Find the signal.<br><span>Keep the evidence.</span></h1>
+      <p class="lede">Scope a set of product feedback, ask a focused question, and follow every answer back to the record it came from. When the evidence is not there, the workspace says so and explains why.</p>
+    </div>
+    <aside class="project-note" aria-label="What runs on this page">
+      <p><span class="dot" aria-hidden="true"></span><strong>What runs here</strong></p>
+      <p><span id="record-count">31</span> synthetic records about a fictional product. Keyword retrieval in your browser. Answers quote records verbatim.</p>
+      <p class="small"><strong>No language model runs on this page.</strong> An optional LLM adapter exists for the local server only and has not been validated with a real provider.</p>
+    </aside>
+  </section>
+
+  <section id="workspace" class="workspace" aria-labelledby="workspace-title">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">01 / INVESTIGATE</p>
+        <h2 id="workspace-title">From feedback to an evidence-backed answer.</h2>
+      </div>
+      <ol class="steps" aria-label="Workflow">
+        <li><span>1</span> Choose the scope</li>
+        <li><span>2</span> Ask a question</li>
+        <li><span>3</span> Check the sources</li>
+      </ol>
+    </div>
+
+    <div class="scope-bar">
+      <label for="channel">Answer scope</label>
+      <select id="channel">
+        <option value="all">All channels</option>
+        <option value="support">Support tickets</option>
+        <option value="interview">Interviews</option>
+        <option value="survey">Surveys</option>
+      </select>
+      <p id="scope-note" class="small">The channel limits both the answer and the library. Themes and text search below only narrow the library.</p>
+    </div>
+
+    <div class="workspace-grid">
+      <section class="ask-panel" aria-labelledby="ask-title">
+        <h3 id="ask-title" class="panel-title">Ask the evidence</h3>
+        <form id="question-form" novalidate>
+          <label for="question">Your question</label>
+          <textarea id="question" maxlength="500" rows="3" placeholder="What breaks CSV export?" aria-describedby="question-help question-error"></textarea>
+          <div class="field-row">
+            <p id="question-help" class="small">Up to 500 characters. <span id="char-count">0 / 500</span></p>
+            <p id="question-error" class="field-error" hidden></p>
+          </div>
+          <div class="ask-actions">
+            <div id="mode-wrap" hidden>
+              <label for="mode" class="inline-label">Answer mode</label>
+              <select id="mode">
+                <option value="extractive">Extractive baseline (no LLM)</option>
+                <option value="live">Live LLM (local server)</option>
+              </select>
+            </div>
+            <p id="mode-static" class="mode-pill">Extractive baseline · no LLM</p>
+            <button id="ask" type="submit" disabled>Loading feedback…</button>
+          </div>
+        </form>
+        <div class="examples" aria-label="Example questions">
+          <span class="small">Try:</span>
+          <button type="button" data-question="What breaks CSV export?" data-channel="all">Export issues</button>
+          <button type="button" data-question="What permission issues affect private projects?" data-channel="all">Access risks</button>
+          <button type="button" data-question="Why do invitations expire?" data-channel="all">Weaker match</button>
+          <button type="button" data-question="Why do CSV exports drop the date column?" data-channel="survey">Too narrow a scope</button>
+          <button type="button" data-question="How much revenue did we make last quarter?" data-channel="all">Out of scope</button>
+        </div>
+        <div id="answer" class="answer" tabindex="-1">
+          <div class="answer-placeholder">
+            <h4>A useful answer starts with a source.</h4>
+            <p>Matching records are quoted word for word, each linked to the library. If the scoped feedback cannot support an answer, you will see why instead of a guess.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="records-panel" aria-labelledby="library-title">
+        <div class="panel-top">
+          <div class="library-heading">
+            <h3 id="library-title" class="panel-title">Evidence library</h3>
+            <p id="visible-count" class="small" role="status"></p>
+          </div>
+          <p class="filter-note">Library filters <strong>do not change answers.</strong></p>
+          <div id="theme-list" class="theme-list" role="group" aria-label="Filter library by theme"></div>
+          <div class="search-row">
+            <label class="sr" for="search">Search the library</label>
+            <input id="search" type="search" placeholder="Search the library…" autocomplete="off">
+            <label class="toggle"><input id="cited-only" type="checkbox" disabled> Cited only</label>
+            <button id="reset" type="button" class="text-button">Reset</button>
+          </div>
+          <p class="small theme-note">Themes come from keyword rules, not learned clusters.</p>
+        </div>
+        <div id="records" class="records" aria-busy="true">
+          <p class="empty">Loading feedback…</p>
+        </div>
+      </section>
+    </div>
+    <p id="announcer" class="sr" aria-live="polite"></p>
+  </section>
+
+  <section id="evaluation" class="evaluation" aria-labelledby="evaluation-title">
+    <div class="evaluation-intro">
+      <p class="eyebrow">02 / MEASURE</p>
+      <h2 id="evaluation-title">Make the limits visible.</h2>
+      <p>The current retriever is scored against the original keyword baseline on two small query sets. Gains and regressions are both reported. These diagnostics describe a synthetic sample, not production accuracy or user impact.</p>
+      <p><a class="text-button" href="./data/evaluation.json">View the full evaluation report (JSON) ↗</a></p>
+    </div>
+    <div id="eval-results" class="eval-results" aria-busy="true"><p class="empty">Loading measured results…</p></div>
+  </section>
+
+  <section class="notes">
+    <div><h3>What this demonstrates</h3><p>A scoped investigation workflow, verbatim citations with source navigation, explicit abstention, shared retrieval logic across browser and server, and a reproducible evaluation that reports failures.</p></div>
+    <div><h3>What it does not show yet</h3><p>Validated LLM answers, semantic search, learned topic clustering, or testing with real reviewers. No customer adoption or business results are claimed.</p></div>
+    <div><h3>Built with assistance</h3><p>A personal portfolio prototype developed with AI coding assistance. Contributions and pending owner review are recorded in the <a href="https://github.com/karan00023/feedback-lens/blob/main/CONTRIBUTIONS.md">contribution record</a>.</p></div>
+  </section>
+</main>
+<footer class="site-footer"><span>Feedback Lens / Karan Kapoor</span><span>Synthetic data. Real implementation. Measured limits.</span></footer>
+</body>
+</html>

@@ -18,9 +18,13 @@ GitHub Pages hosts only `docs/`. Browser queries run locally against the bundled
 
 ## One retrieval implementation
 
-`docs/engine.mjs` is imported by the browser, local server, tests and evaluation runner. It tokenizes text, applies simple plural normalization, weights overlap by inverse document frequency, requires at least two matching content tokens when available, and returns up to five records above a minimum score. Scores are ranking heuristics, not probabilities or confidence estimates.
+`docs/engine.mjs` is imported by the browser, local server, tests and evaluation runner. It removes question-framing stop words, strips common word endings, weights each query term by inverse document frequency within the selected channel, and cites up to five records that contain at least two query terms. Only when no record qualifies does it accept a single rare term carrying at least 40% of the question's weight, and the UI labels that a weaker match. Scores are ranking heuristics, not probabilities or confidence estimates.
 
-The minimum overlap trades recall for fewer unrelated matches. It misses synonym pairs such as “duplicate charges” and “charged twice.” The diagnostic report intentionally records those misses. Semantic retrieval is a next milestone, not an implemented feature.
+Every result carries an explanation (searched terms, terms absent from the scope, the rule applied, and related records that were not cited) so the UI can say why it answered or abstained. Lexical matching still misses synonym pairs such as “duplicate charges” and “charged twice”. The original v1 retriever is frozen in `evaluations/lexical-v1.mjs`; `npm run evaluate` scores both on the development and challenge sets (see `evaluations/RETRIEVAL-V2.md`). Semantic retrieval is a next milestone, not an implemented feature.
+
+## Scope versus library filters
+
+The channel is the only filter that changes what the engine searches, so it is presented as the answer scope and re-runs the current question when changed. Theme chips, text search and “Cited only” filter the library view only. Following a citation clears any library filter that would hide the cited record and announces that it did so.
 
 ## Model boundary
 
@@ -30,7 +34,7 @@ The validator checks answer shape, nonempty evidence, retrieved source IDs and l
 
 ## Local service constraints
 
-The local server has an explicit static-file allowlist, local Host and Origin validation, request-size and question-length limits, an in-memory request counter and generic provider error responses. It has no persistent user store. This is not a production authorization or abuse-prevention system. Do not expose it directly to the Internet.
+The local server serves only files inside `docs/` with an allowlisted extension (HTML, CSS, JavaScript modules, JSON), rejecting encoded traversal, local Host and Origin validation, request-size and question-length limits, an in-memory request counter and generic provider error responses. It has no persistent user store. This is not a production authorization or abuse-prevention system. Do not expose it directly to the Internet.
 
 ## Evaluation
 
