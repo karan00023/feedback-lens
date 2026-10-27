@@ -8,8 +8,8 @@
 - [x] Optional server-side LLM adapter and citation validation.
 - [x] Automated core and local HTTP tests.
 - [x] Reproducible development evaluation with failures.
-- [ ] Verify desktop and mobile browser interactions.
-- [ ] Publish source and GitHub Pages demonstration; verify URLs.
+- [x] Verify initial desktop and mobile browser interactions.
+- [x] Publish source and GitHub Pages demonstration; verify URLs.
 
 ## Priority 2 — Measure the AI improvement
 
