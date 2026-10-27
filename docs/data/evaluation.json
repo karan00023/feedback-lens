@@ -1,292 +1,1279 @@
 {
   "dataset": "synthetic-v1",
-  "mode": "extractive-baseline",
-  "evaluation_type": "development diagnostics; not held out",
-  "cases": 18,
-  "answerable_cases": 13,
-  "unanswerable_cases": 5,
-  "mean_recall_at_5": 0.6282051282051282,
-  "mrr": 0.8461538461538461,
-  "abstention_accuracy": 0.8888888888888888,
+  "corpus_records": 31,
+  "systems": {
+    "baseline": "lexical-v1: original token-overlap retriever (frozen in evaluations/lexical-v1.mjs)",
+    "current": "Current docs/engine.mjs retriever used by the hosted demo"
+  },
+  "evaluation_type": "Development diagnostics; neither set is an independent held-out benchmark",
+  "sets": {
+    "development": "evaluations/cases.json — 18 queries visible while the original baseline was built",
+    "challenge": "evaluations/challenge-cases.json — 24 paraphrased, channel-scoped and unanswerable queries written and committed before retrieval changes, by the same AI-assisted author"
+  },
+  "summary": {
+    "development": {
+      "baseline": {
+        "cases": 18,
+        "answerable_cases": 13,
+        "unanswerable_cases": 5,
+        "mean_recall_at_5": 0.6282,
+        "mrr": 0.8462,
+        "abstention_accuracy": 0.8889,
+        "irrelevant_retrieved": 1
+      },
+      "current": {
+        "cases": 18,
+        "answerable_cases": 13,
+        "unanswerable_cases": 5,
+        "mean_recall_at_5": 0.6282,
+        "mrr": 0.8462,
+        "abstention_accuracy": 0.8889,
+        "irrelevant_retrieved": 1
+      }
+    },
+    "challenge": {
+      "baseline": {
+        "cases": 24,
+        "answerable_cases": 17,
+        "unanswerable_cases": 7,
+        "mean_recall_at_5": 0.5294,
+        "mrr": 0.5294,
+        "abstention_accuracy": 0.6667,
+        "irrelevant_retrieved": 2
+      },
+      "current": {
+        "cases": 24,
+        "answerable_cases": 17,
+        "unanswerable_cases": 7,
+        "mean_recall_at_5": 0.5294,
+        "mrr": 0.5294,
+        "abstention_accuracy": 0.6667,
+        "irrelevant_retrieved": 2
+      }
+    }
+  },
   "limitations": [
     "Small author-written synthetic corpus; no external validity.",
-    "Queries were visible during development.",
-    "Exact quote checks do not measure semantic entailment.",
-    "Live LLM accuracy, latency and cost have not been measured.",
-    "Theme assignment is a keyword taxonomy, not learned clustering."
+    "Both query sets were written by the project author with AI assistance, not independent annotators.",
+    "Retrieval metrics do not measure whether an answer is semantically correct or useful.",
+    "Abstention is decided by retrieval only: questions sharing vocabulary with the corpus can still return records.",
+    "Live LLM accuracy, latency and cost have not been measured."
   ],
   "outcomes": [
     {
+      "set": "development",
       "id": "Q-01",
       "question": "Where are people having trouble creating an account?",
+      "channel": "all",
       "relevant_ids": [
         "FB-001",
         "FB-005"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-001"
-      ],
-      "abstained": false,
-      "recall_at_5": 0.5,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 1.007
+      "baseline": {
+        "retrieved_ids": [
+          "FB-001"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.5,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-001"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.5,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-02",
       "question": "Why do signup verification emails arrive late?",
+      "channel": "all",
       "relevant_ids": [
         "FB-001"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-001"
-      ],
-      "abstained": false,
-      "recall_at_5": 1,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 0.379
+      "baseline": {
+        "retrieved_ids": [
+          "FB-001"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-001"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-03",
       "question": "What problems affect invoice and billing clarity?",
+      "channel": "all",
       "relevant_ids": [
         "FB-006",
         "FB-007",
         "FB-008"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-007"
-      ],
-      "abstained": false,
-      "recall_at_5": 0.3333333333333333,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 0.287
+      "baseline": {
+        "retrieved_ids": [
+          "FB-007"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.3333333333333333,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-007"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.3333333333333333,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-04",
       "question": "What happened with duplicate charges?",
+      "channel": "all",
       "relevant_ids": [
         "FB-006"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [],
-      "abstained": true,
-      "recall_at_5": 0,
-      "reciprocal_rank": 0,
-      "abstention_correct": false,
-      "latency_ms": 0.14
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-05",
       "question": "What problems do users report with search results?",
+      "channel": "all",
       "relevant_ids": [
         "FB-011",
         "FB-012",
         "FB-013"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-012",
-        "FB-015"
-      ],
-      "abstained": false,
-      "recall_at_5": 0.3333333333333333,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 9.118
+      "baseline": {
+        "retrieved_ids": [
+          "FB-012",
+          "FB-015"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.3333333333333333,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-012",
+          "FB-015"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.3333333333333333,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-06",
       "question": "Can users save a search query?",
+      "channel": "all",
       "relevant_ids": [
         "FB-014"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-014"
-      ],
-      "abstained": false,
-      "recall_at_5": 1,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 0.514
+      "baseline": {
+        "retrieved_ids": [
+          "FB-014"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-014"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-07",
       "question": "What breaks CSV export?",
+      "channel": "all",
       "relevant_ids": [
         "FB-016",
         "FB-018"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-016"
-      ],
-      "abstained": false,
-      "recall_at_5": 0.5,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 0.096
+      "baseline": {
+        "retrieved_ids": [
+          "FB-016"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.5,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-016"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.5,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-08",
       "question": "Why do large exports time out?",
+      "channel": "all",
       "relevant_ids": [
         "FB-017"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-017"
-      ],
-      "abstained": false,
-      "recall_at_5": 1,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 0.097
+      "baseline": {
+        "retrieved_ids": [
+          "FB-017"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-017"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-09",
       "question": "What permission issues affect private projects?",
+      "channel": "all",
       "relevant_ids": [
         "FB-021"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-021"
-      ],
-      "abstained": false,
-      "recall_at_5": 1,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 0.132
+      "baseline": {
+        "retrieved_ids": [
+          "FB-021"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-021"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-10",
       "question": "Do users understand admin and editor roles?",
+      "channel": "all",
       "relevant_ids": [
         "FB-023"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-023"
-      ],
-      "abstained": false,
-      "recall_at_5": 1,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 0.104
+      "baseline": {
+        "retrieved_ids": [
+          "FB-023"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-023"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-11",
       "question": "What problems do people have with email notifications?",
+      "channel": "all",
       "relevant_ids": [
         "FB-026",
         "FB-028"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-026"
-      ],
-      "abstained": false,
-      "recall_at_5": 0.5,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 0.112
+      "baseline": {
+        "retrieved_ids": [
+          "FB-026"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.5,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-026"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.5,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-12",
       "question": "Are critical incident alerts delayed?",
+      "channel": "all",
       "relevant_ids": [
         "FB-027"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [
-        "FB-027"
-      ],
-      "abstained": false,
-      "recall_at_5": 1,
-      "reciprocal_rank": 1,
-      "abstention_correct": true,
-      "latency_ms": 0.144
+      "baseline": {
+        "retrieved_ids": [
+          "FB-027"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-027"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-13",
       "question": "What do users like about the digest?",
+      "channel": "all",
       "relevant_ids": [
         "FB-030"
       ],
       "expect_abstain": false,
-      "retrieved_ids": [],
-      "abstained": true,
-      "recall_at_5": 0,
-      "reciprocal_rank": 0,
-      "abstention_correct": false,
-      "latency_ms": 0.071
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-14",
       "question": "How much revenue did we make last quarter?",
+      "channel": "all",
       "relevant_ids": [],
       "expect_abstain": true,
-      "retrieved_ids": [],
-      "abstained": true,
-      "recall_at_5": null,
-      "reciprocal_rank": 0,
-      "abstention_correct": true,
-      "latency_ms": 0.328
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-15",
       "question": "What is the weather in Tokyo?",
+      "channel": "all",
       "relevant_ids": [],
       "expect_abstain": true,
-      "retrieved_ids": [],
-      "abstained": true,
-      "recall_at_5": null,
-      "reciprocal_rank": 0,
-      "abstention_correct": true,
-      "latency_ms": 0.064
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-16",
       "question": "Give me the customer bank routing number",
+      "channel": "all",
       "relevant_ids": [],
       "expect_abstain": true,
-      "retrieved_ids": [],
-      "abstained": true,
-      "recall_at_5": null,
-      "reciprocal_rank": 0,
-      "abstention_correct": true,
-      "latency_ms": 0.076
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-17",
       "question": "Who won the football game?",
+      "channel": "all",
       "relevant_ids": [],
       "expect_abstain": true,
-      "retrieved_ids": [],
-      "abstained": true,
-      "recall_at_5": null,
-      "reciprocal_rank": 0,
-      "abstention_correct": true,
-      "latency_ms": 0.089
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
     },
     {
+      "set": "development",
       "id": "Q-18",
       "question": "What is our hiring plan for next year?",
+      "channel": "all",
       "relevant_ids": [],
       "expect_abstain": true,
-      "retrieved_ids": [],
-      "abstained": true,
-      "recall_at_5": null,
-      "reciprocal_rank": 0,
-      "abstention_correct": true,
-      "latency_ms": 0.202
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-01",
+      "question": "Which customers got billed two times?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-006"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-02",
+      "question": "Why can't new users log in after single sign-on?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-005"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-03",
+      "question": "Complaints about the CSV file encoding of names",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-018"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-018"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-018"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-04",
+      "question": "What goes wrong when exporting large files?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-017"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-017"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-017"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-05",
+      "question": "Are there problems with removing team members?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-022"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-06",
+      "question": "What feedback mentions too many notifications?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-026",
+        "FB-029"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-07",
+      "question": "What confuses people on the billing page?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-007",
+        "FB-008"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-007",
+          "FB-008"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-007",
+          "FB-008"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-08",
+      "question": "What do users want for external stakeholders?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-024"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-024"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-024"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-09",
+      "question": "Does searching with exact phrases work?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-013"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-013"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-013"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-10",
+      "question": "What onboarding steps help new users?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-004"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-003"
+        ],
+        "abstained": false,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-003"
+        ],
+        "abstained": false,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-11",
+      "question": "Why do invitations expire?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-002"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-12",
+      "question": "What happens when usage exceeds our budget?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-009"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-009"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-009"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-13",
+      "question": "Why are archived items showing up in search?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-012"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-012"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-012"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-14",
+      "question": "What do users say about the digest emails?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-028",
+        "FB-030"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-028",
+          "FB-030"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-028",
+          "FB-030"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-15",
+      "question": "Can people schedule recurring exports?",
+      "channel": "all",
+      "relevant_ids": [
+        "FB-019"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-019"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-019"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-16",
+      "question": "What do interviews say about search?",
+      "channel": "interview",
+      "relevant_ids": [
+        "FB-011"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "C-17",
+      "question": "What billing feedback came from surveys?",
+      "channel": "survey",
+      "relevant_ids": [
+        "FB-009",
+        "FB-010"
+      ],
+      "expect_abstain": false,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "U-01",
+      "question": "What is our churn rate?",
+      "channel": "all",
+      "relevant_ids": [],
+      "expect_abstain": true,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "U-02",
+      "question": "How many customers use the mobile app?",
+      "channel": "all",
+      "relevant_ids": [],
+      "expect_abstain": true,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "U-03",
+      "question": "Which competitor has better pricing?",
+      "channel": "all",
+      "relevant_ids": [],
+      "expect_abstain": true,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "U-04",
+      "question": "What is the total invoice amount owed by Acme Corp?",
+      "channel": "all",
+      "relevant_ids": [],
+      "expect_abstain": true,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "U-05",
+      "question": "Translate this page into French",
+      "channel": "all",
+      "relevant_ids": [],
+      "expect_abstain": true,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "U-06",
+      "question": "Why do CSV exports drop the date column?",
+      "channel": "survey",
+      "relevant_ids": [],
+      "expect_abstain": true,
+      "baseline": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "unchanged"
+    },
+    {
+      "set": "challenge",
+      "id": "U-07",
+      "question": "Show me the API key",
+      "channel": "all",
+      "relevant_ids": [],
+      "expect_abstain": true,
+      "baseline": {
+        "retrieved_ids": [
+          "FB-031"
+        ],
+        "abstained": false,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": false
+      },
+      "current": {
+        "retrieved_ids": [
+          "FB-031"
+        ],
+        "abstained": false,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": false
+      },
+      "change": "unchanged"
     }
   ]
 }

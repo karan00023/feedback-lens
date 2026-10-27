@@ -1,0 +1,208 @@
+[
+  {
+    "id": "C-01",
+    "question": "Which customers got billed two times?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-006"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-02",
+    "question": "Why can't new users log in after single sign-on?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-005"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-03",
+    "question": "Complaints about the CSV file encoding of names",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-018"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-04",
+    "question": "What goes wrong when exporting large files?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-017"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-05",
+    "question": "Are there problems with removing team members?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-022"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-06",
+    "question": "What feedback mentions too many notifications?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-026",
+      "FB-029"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-07",
+    "question": "What confuses people on the billing page?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-007",
+      "FB-008"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-08",
+    "question": "What do users want for external stakeholders?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-024"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-09",
+    "question": "Does searching with exact phrases work?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-013"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-10",
+    "question": "What onboarding steps help new users?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-004"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-11",
+    "question": "Why do invitations expire?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-002"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-12",
+    "question": "What happens when usage exceeds our budget?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-009"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-13",
+    "question": "Why are archived items showing up in search?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-012"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-14",
+    "question": "What do users say about the digest emails?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-028",
+      "FB-030"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-15",
+    "question": "Can people schedule recurring exports?",
+    "channel": "all",
+    "relevant_ids": [
+      "FB-019"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-16",
+    "question": "What do interviews say about search?",
+    "channel": "interview",
+    "relevant_ids": [
+      "FB-011"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "C-17",
+    "question": "What billing feedback came from surveys?",
+    "channel": "survey",
+    "relevant_ids": [
+      "FB-009",
+      "FB-010"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "U-01",
+    "question": "What is our churn rate?",
+    "channel": "all",
+    "relevant_ids": [],
+    "expect_abstain": true
+  },
+  {
+    "id": "U-02",
+    "question": "How many customers use the mobile app?",
+    "channel": "all",
+    "relevant_ids": [],
+    "expect_abstain": true
+  },
+  {
+    "id": "U-03",
+    "question": "Which competitor has better pricing?",
+    "channel": "all",
+    "relevant_ids": [],
+    "expect_abstain": true
+  },
+  {
+    "id": "U-04",
+    "question": "What is the total invoice amount owed by Acme Corp?",
+    "channel": "all",
+    "relevant_ids": [],
+    "expect_abstain": true
+  },
+  {
+    "id": "U-05",
+    "question": "Translate this page into French",
+    "channel": "all",
+    "relevant_ids": [],
+    "expect_abstain": true
+  },
+  {
+    "id": "U-06",
+    "question": "Why do CSV exports drop the date column?",
+    "channel": "survey",
+    "relevant_ids": [],
+    "expect_abstain": true
+  },
+  {
+    "id": "U-07",
+    "question": "Show me the API key",
+    "channel": "all",
+    "relevant_ids": [],
+    "expect_abstain": true
+  }
+]
