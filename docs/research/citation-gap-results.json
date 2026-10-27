@@ -1,0 +1,30 @@
+{
+  "study": "citation-gap-dev-v1",
+  "execution": "scripted-fixture",
+  "question": "Why can a new user not finish signup?",
+  "source": {
+    "id": "S01",
+    "text": "The signup verification link returns an expired-token error."
+  },
+  "results": [
+    {
+      "id": "supported-control",
+      "text": "The signup verification link returns an expired-token error.",
+      "authored_support_label": true,
+      "automatic_check_pass": true,
+      "semantic_correctness_reported_by_harness": null
+    },
+    {
+      "id": "unsupported-counterexample",
+      "text": "Revenue increased by a billion dollars.",
+      "authored_support_label": false,
+      "automatic_check_pass": true,
+      "semantic_correctness_reported_by_harness": null
+    }
+  ],
+  "limitations": [
+    "Two deliberately authored examples, not model outputs or a benchmark.",
+    "Support labels are authored for this diagnostic, not an independent human review.",
+    "No general unsupported-answer rate or provider comparison follows from this demonstration."
+  ]
+}

@@ -8,6 +8,9 @@ The browser demo works without an API key. It uses an **extractive retrieval bas
 
 ## Applied AI lab extensions
 
+[Published technical studies](https://karan00023.github.io/feedback-lens/research/) include the synthetic telemetry report and a reproducible citation-validation counterexample. They are AI-assisted technical notes, not peer-reviewed papers. Run `npm run study:citations` to reproduce the latter.
+
+
 - [Portfolio lab index](https://karan00023.github.io/feedback-lens/lab/)
 - [Telemetry Lab](https://karan00023.github.io/feedback-lens/telemetry/): a synthetic request replay with cohort analysis, objective compliance, assumed cost and stage inspection.
 - [Technical report](experiments/telemetry/REPORT.md): methods and measured simulation results, not peer-reviewed research.

@@ -31,3 +31,7 @@ Karan requested telemetry-analysis apps, technical papers, recurring model revie
 ## October 27 — offline comparison harness
 
 The coding agent implemented the provider-neutral importer/scorer, development fixtures, CLI, tests and draft human-review rubric. Karan has not yet independently reviewed the labels or implementation. No provider calls, paid inference, human evaluation or held-out performance occurred in this milestone.
+
+## October 27 — citation technical note
+
+The coding agent implemented the reproducible citation counterexample, technical note and studies index. Karan requested practical research-style artifacts for interview preparation; no independent review or sole human authorship is claimed.

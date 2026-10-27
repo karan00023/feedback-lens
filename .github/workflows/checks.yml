@@ -16,3 +16,5 @@ jobs:
       - run: git diff --exit-code -- docs/telemetry/requests.json docs/telemetry/results.json
       - run: npm run comparison:fixtures
       - run: git diff --exit-code -- experiments/comparison/fixtures
+      - run: npm run study:citations
+      - run: git diff --exit-code -- docs/research/citation-gap-results.json

@@ -34,3 +34,7 @@ Implemented a provider-neutral offline comparison CLI with dataset/prompt hashes
 All 30 tests passed locally, including an end-to-end CLI test and a deliberate demonstration that an unsupported claim with a genuine quote can pass automatic citation checks. No paid or live provider calls were made. Missing results count against the planned denominator; unknown cost and incomplete token totals remain null.
 
 Next: independently review dataset labels, prepare a private blinded review packet and retain a truly untouched set before collecting provider results. Model Notes 001 is dated October 27; a duplicate weekly source review is not due. Publication and workflow status for this source milestone should be checked on GitHub.
+
+## October 27 — published study preparation
+
+Added a technical-studies index and a citation-validation counterexample using the real offline harness. Two scripted claims share one valid quote; both pass automatic checks, while only the signup claim follows from the source. This is a constructed diagnostic, not model performance or independent human evaluation. The authoring agent wrote the code and article; owner review remains pending. Publication and CI must be checked before reporting the new note live.
