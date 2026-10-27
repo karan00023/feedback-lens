@@ -1,0 +1,62 @@
+# When Aggregate Latency Misleads: A Synthetic AI Workflow Telemetry Study
+
+Karan Kapoor · Applied AI portfolio · October 27, 2026
+
+**Technical report v0.1. Not peer reviewed.** Developed with AI coding assistance. This is an executable simulation and methods demonstration, not a claim of original scientific discovery, a production deployment or independently completed research.
+
+## Abstract
+
+Can a release improve within each workload while the overall median gets worse? A deterministic replay of 480 synthetic AI workflow requests demonstrates this failure mode. The aggregate p50 rises from 953 ms to 2,543 ms, even though both quick and deep cohorts improve. A changed traffic mix, rather than an observed within-cohort slowdown, explains this constructed example. The demonstration combines request-level latency, a joint success-and-latency objective, hypothetical token costs and drill-down evidence. It motivates cohort-aware release reviews without claiming model quality or production impact.
+
+## 1. Question and study design
+
+The unit of analysis is one request. Two fictional releases each contain 240 requests. Release v1 has 216 quick requests and 24 deep investigations; v2 has 96 quick requests and 144 deep investigations. A fixed pseudorandom generator with seed 731 creates queue, retrieval and model-stage durations. For v2, the deterministic base model duration is multiplied by 0.8 before random variation. Different random draws and unequal cohort sizes mean this is not a paired benchmark. Failures are simulated, not observed outages.
+
+These inputs deliberately create a mix shift. The study does not discover an unknown incident cause; it tests whether the analysis exposes a known construction. No model is called. The task labels are authored. Request token counts are fixed by task. No customer text, prompts, personal identifiers or employer data appear in the sample.
+
+## 2. Methods
+
+Total duration is the sum of three sequential stages. Percentiles use the nearest-rank convention on raw request durations, including failures: sort n values and select rank ceil(p × n). We do not average subgroup percentiles. Empty cohorts return null rather than a misleading zero.
+
+A good request both succeeds and completes within 2,500 ms, inclusive. The target good-request share is 95%. Bad requests are the union of failures and requests exceeding the latency limit; a slow failure is counted once. Sample budget burn is the observed bad-request share divided by 0.05. It is a normalized sample diagnostic, not a production paging policy or a multi-window alert.
+
+Cost is (input tokens × 2 + output tokens × 8) / 1,000,000 USD. The rates are hypothetical assumptions, not verified vendor prices. Cost per success divides total assumed cost, including failed requests, by the number of successful requests. Real billing can differ because retries, caching, reasoning tokens and partial failures are not represented.
+
+## 3. Results
+
+All pairs below are v1 / v2. Durations are milliseconds.
+
+| Scope | Requests | p50 | p95 | Good request share |
+| --- | --- | --- | --- | --- |
+| all | 240 / 240 | 953 / 2,543 | 3,184 / 2,793 | 87.9% / 43.8% |
+| quick | 216 / 96 | 947 / 815 | 1,100 / 986 | 97.7% / 99.0% |
+| deep | 24 / 144 | 3,184 / 2,679 | 3,330 / 2,814 | 0.0% / 6.9% |
+
+Aggregate error rate is 2.5% in both releases. Under the joint objective, sample burn rises from 2.42× to 11.25×. Assumed cost per success rises from $0.0037 to $0.0101. The larger deep-workload share increases aggregate spend even without a change in per-task token counts or assumed unit prices. Therefore the aggregate cost change alone is not evidence of vendor price inflation or a model becoming less efficient.
+
+The cohort medians improve while the aggregate median worsens. Aggregate p95 improves, demonstrating that median, tail latency and objective compliance answer different questions. A dashboard with a single headline metric would miss these distinctions.
+
+## 4. Product decision
+
+Do not infer a need to roll back from the aggregate median alone. First compare workload composition and cohort distributions, inspect slow requests, and check whether the latency objective is appropriate for deep investigations. A real release review would also require output-quality labels, comparable samples, deployment timing and a controlled comparison. Relaxing the objective merely to make a chart green would not establish that user needs were met.
+
+The app supports that review: workload scope, two release summaries, assumption controls and the slowest ten request records with stage breakdowns. OpenTelemetry distinguishes metrics, traces and logs; this app borrows that conceptual separation but is not an OpenTelemetry collector, instrumentation integration or OTLP-compliant trace viewer.
+
+## 5. Threats to validity
+
+This single seeded synthetic sample cannot establish external validity, causal impact, statistical significance or real-world savings. The generator uses simple uniform variation and fixed task token counts. There is no live traffic, streaming, concurrency, cache, retry model, time-window analysis, confidence interval or user-quality measurement. The generation parameters were chosen to illustrate the mix-shift failure mode. They were not fit to an independent dataset.
+
+## 6. Reproducibility and next experiment
+
+Run `npm run telemetry` to regenerate requests.json and results.json, then `npm test`. The browser uses the same metrics module as the report generator. Change the seed or workload mix to test robustness; do not present repeated synthetic runs as real provider benchmarks. Next, instrument a consenting local application, establish a held-out task set, record exact model versions and settings, and compare quality, successful-task latency and actual usage cost under matched workloads.
+
+## References and artifacts
+
+- OpenTelemetry, [Signals](https://opentelemetry.io/docs/concepts/signals/), accessed October 27, 2026. Supports the conceptual distinction between metrics, traces and logs.
+- [Interactive Telemetry Lab](https://karan00023.github.io/feedback-lens/telemetry/).
+- [Reproducible source](https://github.com/karan00023/feedback-lens/tree/main/experiments/telemetry).
+- [Request sample](../../docs/telemetry/requests.json) and [machine-readable baseline results](../../docs/telemetry/results.json).
+
+## Contribution disclosure
+
+Karan requested telemetry analysis, useful apps and research-style portfolio work. The coding agent designed and implemented this initial simulation, calculations, interface, tests and report. Karan's independent review, implementation changes and interpretation remain to be recorded. Commit attribution does not establish sole authorship.

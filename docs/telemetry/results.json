@@ -1,0 +1,100 @@
+{
+  "dataset": "synthetic-telemetry-v1",
+  "seed": 731,
+  "requests": 480,
+  "assumptions": {
+    "limitMs": 2500,
+    "target": 0.95,
+    "inputRate": 2,
+    "outputRate": 8
+  },
+  "comparison": [
+    {
+      "task": "all",
+      "v1": {
+        "n": 240,
+        "errors": 6,
+        "bad": 29,
+        "p50": 953,
+        "p95": 3184,
+        "errorRate": 0.025,
+        "goodRate": 0.8791666666666667,
+        "burn": 2.4166666666666647,
+        "cost": 0.8649599999999982,
+        "costPerSuccess": 0.0036964102564102487
+      },
+      "v2": {
+        "n": 240,
+        "errors": 6,
+        "bad": 135,
+        "p50": 2543,
+        "p95": 2793,
+        "errorRate": 0.025,
+        "goodRate": 0.4375,
+        "burn": 11.24999999999999,
+        "cost": 2.3577599999999994,
+        "costPerSuccess": 0.010075897435897433
+      }
+    },
+    {
+      "task": "quick",
+      "v1": {
+        "n": 216,
+        "errors": 5,
+        "bad": 5,
+        "p50": 947,
+        "p95": 1100,
+        "errorRate": 0.023148148148148147,
+        "goodRate": 0.9768518518518519,
+        "burn": 0.4629629629629625,
+        "cost": 0.5097599999999973,
+        "costPerSuccess": 0.002415924170616101
+      },
+      "v2": {
+        "n": 96,
+        "errors": 1,
+        "bad": 1,
+        "p50": 815,
+        "p95": 986,
+        "errorRate": 0.010416666666666666,
+        "goodRate": 0.9895833333333334,
+        "burn": 0.20833333333333315,
+        "cost": 0.22656000000000007,
+        "costPerSuccess": 0.0023848421052631587
+      }
+    },
+    {
+      "task": "deep",
+      "v1": {
+        "n": 24,
+        "errors": 1,
+        "bad": 24,
+        "p50": 3184,
+        "p95": 3330,
+        "errorRate": 0.041666666666666664,
+        "goodRate": 0,
+        "burn": 19.999999999999982,
+        "cost": 0.35519999999999996,
+        "costPerSuccess": 0.015443478260869564
+      },
+      "v2": {
+        "n": 144,
+        "errors": 5,
+        "bad": 134,
+        "p50": 2679,
+        "p95": 2814,
+        "errorRate": 0.034722222222222224,
+        "goodRate": 0.06944444444444442,
+        "burn": 18.611111111111097,
+        "cost": 2.131199999999997,
+        "costPerSuccess": 0.015332374100719404
+      }
+    }
+  ],
+  "limits": [
+    "Single deterministic synthetic sample; no causal inference or confidence intervals.",
+    "No provider calls, actual billing, model quality labels or real traffic.",
+    "Rates are hypothetical USD per million tokens, not vendor prices.",
+    "No retries, caching, parallel spans, network streaming or partial billing modeled."
+  ]
+}

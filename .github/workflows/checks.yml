@@ -12,3 +12,5 @@ jobs:
           node-version: '22'
       - run: npm test
       - run: npm run evaluate
+      - run: npm run telemetry
+      - run: git diff --exit-code -- docs/telemetry/requests.json docs/telemetry/results.json

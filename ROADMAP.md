@@ -35,3 +35,15 @@
 - [ ] Add learned topic clustering with a comparison to the keyword taxonomy.
 - [ ] Add a reusable widget or plugin contract and document integration choices.
 - [ ] Consider public live hosting only after access, cost and retention controls exist.
+
+## Applied AI lab — staged extension
+
+- [x] Initial synthetic telemetry analysis app, reproducible dataset and calculation tests.
+- [x] Technical report with methods, simulation findings and limitations.
+- [x] First official-source model review and test hypotheses.
+- [ ] Matched-workload comparison harness with a versioned, unseen task set and quality rubric.
+- [ ] Real local-app instrumentation and telemetry export; exclude raw private prompts.
+- [ ] Live provider evaluation after approved server-side access and a budget are available.
+- [ ] Owner walkthrough and reviewer pilot, followed by an evidence-backed case study.
+
+Prioritize finishing and validating these before adding unrelated demo sites. Publish on actual completion dates. Aim for one substantial case study every one to two weeks, adjusted to evidence and review readiness. Never fabricate a history of work to make the portfolio look older.
