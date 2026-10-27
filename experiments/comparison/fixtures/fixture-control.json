@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "provider": "scripted-fixture",
+  "execution": "fixture",
+  "dataset_sha256": "a7b090a52245c1a6e4ff42577910da1e85536e600293b379f2afb428e4b7a71b",
+  "prompt_sha256": "3fc19155bb4fe18c8f495c3a40c1f0c41847a8e2a78b8da9d0d0e4ccbcad5399",
+  "trials": 1,
+  "settings": {
+    "source": "hand-scripted outputs and timings; no model calls"
+  },
+  "run_id": "fixture-control",
+  "model_id": "fixture-control-not-a-model",
+  "rows": [
+    {
+      "case_id": "C01",
+      "trial": 1,
+      "outcome": "ok",
+      "latency_ms": 100,
+      "input_tokens": 100,
+      "output_tokens": 40,
+      "actual_cost_usd": null,
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "The signup verification link returns an expired-token error.",
+            "evidence": [
+              {
+                "source_id": "S01",
+                "quote": "The signup verification link returns an expired-token error."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "C02",
+      "trial": 1,
+      "outcome": "ok",
+      "latency_ms": 110,
+      "input_tokens": 100,
+      "output_tokens": 40,
+      "actual_cost_usd": null,
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "The billing receipt is missing the company tax identifier.",
+            "evidence": [
+              {
+                "source_id": "S02",
+                "quote": "The billing receipt is missing the company tax identifier."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "C03",
+      "trial": 1,
+      "outcome": "ok",
+      "latency_ms": 120,
+      "input_tokens": 100,
+      "output_tokens": 40,
+      "actual_cost_usd": null,
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "The exported CSV repeats the first row at the bottom.",
+            "evidence": [
+              {
+                "source_id": "S03",
+                "quote": "The exported CSV repeats the first row at the bottom."
+              }
+            ]
+          },
+          {
+            "text": "The CSV export omits the project owner column.",
+            "evidence": [
+              {
+                "source_id": "S04",
+                "quote": "The CSV export omits the project owner column."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "C04",
+      "trial": 1,
+      "outcome": "ok",
+      "latency_ms": 130,
+      "input_tokens": 100,
+      "output_tokens": 40,
+      "actual_cost_usd": null,
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "Viewer accounts can read the report but cannot edit its title.",
+            "evidence": [
+              {
+                "source_id": "S05",
+                "quote": "Viewer accounts can read the report but cannot edit its title."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "C05",
+      "trial": 1,
+      "outcome": "ok",
+      "latency_ms": 140,
+      "input_tokens": 100,
+      "output_tokens": 40,
+      "actual_cost_usd": null,
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "The weekly notification digest arrives on time.",
+            "evidence": [
+              {
+                "source_id": "S06",
+                "quote": "The weekly notification digest arrives on time."
+              }
+            ]
+          },
+          {
+            "text": "Our weekly notification digest has not arrived for two weeks.",
+            "evidence": [
+              {
+                "source_id": "S07",
+                "quote": "Our weekly notification digest has not arrived for two weeks."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "C06",
+      "trial": 1,
+      "outcome": "ok",
+      "latency_ms": 150,
+      "input_tokens": 100,
+      "output_tokens": 40,
+      "actual_cost_usd": null,
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "Saved searches lose their date filter after reopening.",
+            "evidence": [
+              {
+                "source_id": "S08",
+                "quote": "Saved searches lose their date filter after reopening."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "C07",
+      "trial": 1,
+      "outcome": "ok",
+      "latency_ms": 160,
+      "input_tokens": 100,
+      "output_tokens": 40,
+      "actual_cost_usd": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "claims": []
+      }
+    },
+    {
+      "case_id": "C08",
+      "trial": 1,
+      "outcome": "ok",
+      "latency_ms": 170,
+      "input_tokens": 100,
+      "output_tokens": 40,
+      "actual_cost_usd": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "claims": []
+      }
+    }
+  ]
+}

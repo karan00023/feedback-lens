@@ -26,3 +26,11 @@ Local desktop and 390px mobile smoke checks covered workload filtering, rate cha
 
 Next bounded milestone: a comparison harness and quality rubric using unseen tasks, or real local telemetry instrumentation. Live model access is still unavailable; continue independent work without inventing results. Model notes should be verified from official sources and reviewed weekly, with additional notes only for significant relevant releases. Keep high-level summaries linked to underlying evidence.
 
+
+## October 27, 2026 — offline comparison milestone
+
+Implemented a provider-neutral offline comparison CLI with dataset/prompt hashes, trial/coverage checks, literal citation validation, reference-label comparisons and separate pending semantic review. Eight authored development cases and two explicitly scripted runs exercise the contract. They are not a provider benchmark or untouched test set. Added a draft human-review rubric.
+
+All 30 tests passed locally, including an end-to-end CLI test and a deliberate demonstration that an unsupported claim with a genuine quote can pass automatic citation checks. No paid or live provider calls were made. Missing results count against the planned denominator; unknown cost and incomplete token totals remain null.
+
+Next: independently review dataset labels, prepare a private blinded review packet and retain a truly untouched set before collecting provider results. Model Notes 001 is dated October 27; a duplicate weekly source review is not due. Publication and workflow status for this source milestone should be checked on GitHub.

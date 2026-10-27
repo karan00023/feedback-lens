@@ -27,3 +27,7 @@ After genuine review and validation, add the specific decisions, implementation 
 ## October 27 extension
 
 Karan requested telemetry-analysis apps, technical papers, recurring model reviews and continued publication. The coding agent authored the initial Telemetry Lab generator, calculation module, UI, tests, technical report, model source reviews and lab index. Results describe a controlled synthetic sample; reviews describe official catalog positioning and proposed tests. Owner review and independent contributions remain pending. No publication dates were backdated and no peer review, production telemetry or live provider comparison is claimed.
+
+## October 27 — offline comparison harness
+
+The coding agent implemented the provider-neutral importer/scorer, development fixtures, CLI, tests and draft human-review rubric. Karan has not yet independently reviewed the labels or implementation. No provider calls, paid inference, human evaluation or held-out performance occurred in this milestone.

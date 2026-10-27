@@ -10,6 +10,7 @@
     "start": "node server.mjs",
     "test": "node --test",
     "evaluate": "node evaluations/run.mjs",
-    "telemetry": "node experiments/telemetry/generate.mjs"
+    "telemetry": "node experiments/telemetry/generate.mjs",
+    "comparison:fixtures": "node experiments/comparison/fixtures/generate.mjs"
   }
 }

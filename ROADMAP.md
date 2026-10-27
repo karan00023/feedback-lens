@@ -14,7 +14,7 @@
 ## Priority 2 — Measure the AI improvement
 
 - [ ] Configure a server-side model/key locally and run live tests.
-- [ ] Add response-quality labels and human review guidelines.
+- [x] Draft response-quality rubric and human review guidelines; independent annotation remains pending.
 - [ ] Create a separate unseen query set before retrieval tuning.
 - [ ] Compare lexical and semantic retrieval on that set.
 - [ ] Run injection, misleading evidence, conflict and abstention cases against the live model.
@@ -41,7 +41,8 @@
 - [x] Initial synthetic telemetry analysis app, reproducible dataset and calculation tests.
 - [x] Technical report with methods, simulation findings and limitations.
 - [x] First official-source model review and test hypotheses.
-- [ ] Matched-workload comparison harness with a versioned, unseen task set and quality rubric.
+- [x] Offline matched-workload comparison harness, versioned development fixtures and draft quality rubric.
+- [ ] Independently reviewed, untouched task set and a blinded human-review packet.
 - [ ] Real local-app instrumentation and telemetry export; exclude raw private prompts.
 - [ ] Live provider evaluation after approved server-side access and a budget are available.
 - [ ] Owner walkthrough and reviewer pilot, followed by an evidence-backed case study.

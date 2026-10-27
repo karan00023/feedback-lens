@@ -11,6 +11,7 @@ The browser demo works without an API key. It uses an **extractive retrieval bas
 - [Portfolio lab index](https://karan00023.github.io/feedback-lens/lab/)
 - [Telemetry Lab](https://karan00023.github.io/feedback-lens/telemetry/): a synthetic request replay with cohort analysis, objective compliance, assumed cost and stage inspection.
 - [Technical report](experiments/telemetry/REPORT.md): methods and measured simulation results, not peer-reviewed research.
+- [Offline model-comparison harness](experiments/comparison/README.md): imports matched outputs, checks coverage and citations, and keeps semantic review separate. Example outputs are scripted fixtures, not model results.
 - [Model notes 001](experiments/MODEL-NOTES-001.md): official-source reviews and test hypotheses, not a provider benchmark.
 
 Run `npm run telemetry` to reproduce the request dataset and baseline report. Serve the whole `docs/` tree with a static server (for example `python3 -m http.server 8768 --bind 127.0.0.1 --directory docs`) to preview the added pages locally. The optional LLM server serves only its original allowlisted Feedback Lens files.

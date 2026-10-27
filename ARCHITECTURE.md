@@ -35,3 +35,7 @@ The local server has an explicit static-file allowlist, local Host and Origin va
 ## Evaluation
 
 The suite contains answerable and unanswerable questions. It computes per-query recall at five, reciprocal rank and abstention decisions; the summary includes failure cases. It does not measure semantic answer correctness or live model performance. The questions are development fixtures rather than unseen test data.
+
+## Offline comparison boundary
+
+The provider-neutral comparison CLI imports already collected outputs and never invokes an API. It requires matching dataset/prompt hashes and trial counts, rejects duplicate records, and counts missing attempts against the full planned denominator. Structural citation and reference-label checks remain separate from semantic correctness, which is unreviewed. Cost and token totals stay unknown when any expected attempt has incomplete usage. Fixture responses and timing are scripted. See experiments/comparison/README.md for the import contract and limitations.
