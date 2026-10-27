@@ -11,12 +11,23 @@
 - [x] Verify initial desktop and mobile browser interactions.
 - [x] Publish source and GitHub Pages demonstration; verify URLs.
 
+## Priority 1b — Coherent core workflow
+
+- [x] Explain answer scope versus library-only filters in the UI.
+- [x] Explain why each answer or abstention happened.
+- [x] Useful loading, failed-load, empty, weaker-match and abstention states.
+- [x] Local server serves every portfolio page; consistent light theme across pages.
+- [x] Automated browser workflow checks at desktop and mobile widths.
+- [ ] Verify the published site from a network that can reach GitHub Pages after each release.
+
 ## Priority 2 — Measure the AI improvement
 
 - [ ] Configure a server-side model/key locally and run live tests.
 - [x] Draft response-quality rubric and human review guidelines; independent annotation remains pending.
-- [ ] Create a separate unseen query set before retrieval tuning.
-- [ ] Compare lexical and semantic retrieval on that set.
+- [x] Write and commit a challenge query set before retrieval tuning (same author; not independent).
+- [ ] Create an independently written held-out query set.
+- [x] Compare lexical v1 and v2 side by side, reporting gains and regressions.
+- [ ] Compare lexical and semantic retrieval on a held-out set.
 - [ ] Run injection, misleading evidence, conflict and abstention cases against the live model.
 - [ ] Measure latency, tokens and actual API cost using verified pricing.
 - [ ] Implement contextual follow-up questions and inspect how scope changes affect evidence.

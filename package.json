@@ -13,6 +13,7 @@
     "telemetry": "node experiments/telemetry/generate.mjs",
     "comparison:fixtures": "node experiments/comparison/fixtures/generate.mjs",
     "study:citations": "node experiments/comparison/citation-gap.mjs",
-    "telemetry:local": "node experiments/telemetry/measure-local.mjs"
+    "telemetry:local": "node experiments/telemetry/measure-local.mjs",
+    "test:browser": "node tests/browser/workflow.browser.mjs"
   }
 }

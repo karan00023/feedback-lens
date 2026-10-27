@@ -25,10 +25,10 @@
         "cases": 18,
         "answerable_cases": 13,
         "unanswerable_cases": 5,
-        "mean_recall_at_5": 0.6282,
-        "mrr": 0.8462,
-        "abstention_accuracy": 0.8889,
-        "irrelevant_retrieved": 1
+        "mean_recall_at_5": 0.7308,
+        "mrr": 0.8846,
+        "abstention_accuracy": 0.9444,
+        "irrelevant_retrieved": 2
       }
     },
     "challenge": {
@@ -45,10 +45,10 @@
         "cases": 24,
         "answerable_cases": 17,
         "unanswerable_cases": 7,
-        "mean_recall_at_5": 0.5294,
-        "mrr": 0.5294,
-        "abstention_accuracy": 0.6667,
-        "irrelevant_retrieved": 2
+        "mean_recall_at_5": 0.6471,
+        "mrr": 0.6471,
+        "abstention_accuracy": 0.75,
+        "irrelevant_retrieved": 3
       }
     }
   },
@@ -208,15 +208,16 @@
       "current": {
         "retrieved_ids": [
           "FB-012",
+          "FB-013",
           "FB-015"
         ],
         "abstained": false,
-        "recall_at_5": 0.3333333333333333,
+        "recall_at_5": 0.6666666666666666,
         "reciprocal_rank": 1,
         "irrelevant_retrieved": 1,
         "abstention_correct": true
       },
-      "change": "unchanged"
+      "change": "improved"
     },
     {
       "set": "development",
@@ -455,14 +456,17 @@
         "abstention_correct": false
       },
       "current": {
-        "retrieved_ids": [],
-        "abstained": true,
-        "recall_at_5": 0,
-        "reciprocal_rank": 0,
-        "irrelevant_retrieved": 0,
-        "abstention_correct": false
+        "retrieved_ids": [
+          "FB-028",
+          "FB-030"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 0.5,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": true
       },
-      "change": "unchanged"
+      "change": "mixed"
     },
     {
       "set": "development",
@@ -846,15 +850,16 @@
       },
       "current": {
         "retrieved_ids": [
-          "FB-013"
+          "FB-013",
+          "FB-011"
         ],
         "abstained": false,
         "recall_at_5": 1,
         "reciprocal_rank": 1,
-        "irrelevant_retrieved": 0,
+        "irrelevant_retrieved": 1,
         "abstention_correct": true
       },
-      "change": "unchanged"
+      "change": "regressed"
     },
     {
       "set": "challenge",
@@ -905,14 +910,16 @@
         "abstention_correct": false
       },
       "current": {
-        "retrieved_ids": [],
-        "abstained": true,
-        "recall_at_5": 0,
-        "reciprocal_rank": 0,
+        "retrieved_ids": [
+          "FB-002"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
         "irrelevant_retrieved": 0,
-        "abstention_correct": false
+        "abstention_correct": true
       },
-      "change": "unchanged"
+      "change": "improved"
     },
     {
       "set": "challenge",
@@ -1059,14 +1066,16 @@
         "abstention_correct": false
       },
       "current": {
-        "retrieved_ids": [],
-        "abstained": true,
-        "recall_at_5": 0,
-        "reciprocal_rank": 0,
+        "retrieved_ids": [
+          "FB-011"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
         "irrelevant_retrieved": 0,
-        "abstention_correct": false
+        "abstention_correct": true
       },
-      "change": "unchanged"
+      "change": "improved"
     },
     {
       "set": "challenge",

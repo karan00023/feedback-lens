@@ -39,3 +39,7 @@ The coding agent implemented the reproducible citation counterexample, technical
 ## October 27 — local request instrumentation
 
 The coding agent implemented bounded local HTTP lifecycle telemetry, a sequential smoke runner and tests. Actual local response timings are measured over synthetic feedback; no model/provider or production traffic was observed. This supports platform observability discussion, but does not establish Karan's independent implementation/review or enterprise gateway/routing experience.
+
+## October 27 — workflow completion and retrieval v2
+
+At Karan's request, the coding agent audited the project and implemented the workspace rebuild, retrieval v2, the challenge query set, the side-by-side evaluation, browser workflow checks, the local static-file server change, the shared lab palette and the related documentation. Karan has not yet reviewed these changes. The challenge queries and relevance labels were written by the agent, not independent annotators.
