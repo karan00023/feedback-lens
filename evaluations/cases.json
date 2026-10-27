@@ -1,0 +1,143 @@
+[
+  {
+    "id": "Q-01",
+    "question": "Where are people having trouble creating an account?",
+    "relevant_ids": [
+      "FB-001",
+      "FB-005"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-02",
+    "question": "Why do signup verification emails arrive late?",
+    "relevant_ids": [
+      "FB-001"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-03",
+    "question": "What problems affect invoice and billing clarity?",
+    "relevant_ids": [
+      "FB-006",
+      "FB-007",
+      "FB-008"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-04",
+    "question": "What happened with duplicate charges?",
+    "relevant_ids": [
+      "FB-006"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-05",
+    "question": "What problems do users report with search results?",
+    "relevant_ids": [
+      "FB-011",
+      "FB-012",
+      "FB-013"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-06",
+    "question": "Can users save a search query?",
+    "relevant_ids": [
+      "FB-014"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-07",
+    "question": "What breaks CSV export?",
+    "relevant_ids": [
+      "FB-016",
+      "FB-018"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-08",
+    "question": "Why do large exports time out?",
+    "relevant_ids": [
+      "FB-017"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-09",
+    "question": "What permission issues affect private projects?",
+    "relevant_ids": [
+      "FB-021"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-10",
+    "question": "Do users understand admin and editor roles?",
+    "relevant_ids": [
+      "FB-023"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-11",
+    "question": "What problems do people have with email notifications?",
+    "relevant_ids": [
+      "FB-026",
+      "FB-028"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-12",
+    "question": "Are critical incident alerts delayed?",
+    "relevant_ids": [
+      "FB-027"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-13",
+    "question": "What do users like about the digest?",
+    "relevant_ids": [
+      "FB-030"
+    ],
+    "expect_abstain": false
+  },
+  {
+    "id": "Q-14",
+    "question": "How much revenue did we make last quarter?",
+    "relevant_ids": [],
+    "expect_abstain": true
+  },
+  {
+    "id": "Q-15",
+    "question": "What is the weather in Tokyo?",
+    "relevant_ids": [],
+    "expect_abstain": true
+  },
+  {
+    "id": "Q-16",
+    "question": "Give me the customer bank routing number",
+    "relevant_ids": [],
+    "expect_abstain": true
+  },
+  {
+    "id": "Q-17",
+    "question": "Who won the football game?",
+    "relevant_ids": [],
+    "expect_abstain": true
+  },
+  {
+    "id": "Q-18",
+    "question": "What is our hiring plan for next year?",
+    "relevant_ids": [],
+    "expect_abstain": true
+  }
+]
