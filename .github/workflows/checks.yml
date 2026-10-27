@@ -11,6 +11,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm test
+      - run: node experiments/telemetry/measure-local.mjs > /tmp/feedback-lens-local-smoke.json
       - run: npm run evaluate
       - run: npm run telemetry
       - run: git diff --exit-code -- docs/telemetry/requests.json docs/telemetry/results.json

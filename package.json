@@ -12,6 +12,7 @@
     "evaluate": "node evaluations/run.mjs",
     "telemetry": "node experiments/telemetry/generate.mjs",
     "comparison:fixtures": "node experiments/comparison/fixtures/generate.mjs",
-    "study:citations": "node experiments/comparison/citation-gap.mjs"
+    "study:citations": "node experiments/comparison/citation-gap.mjs",
+    "telemetry:local": "node experiments/telemetry/measure-local.mjs"
   }
 }

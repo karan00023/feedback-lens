@@ -76,3 +76,11 @@ No customer adoption, business savings, production reliability, autonomous multi
 - [Contribution record](CONTRIBUTIONS.md)
 
 This is Karan Kapoor's personal portfolio project, developed with AI coding assistance. The contribution record distinguishes project direction from agent-written code and pending validation.
+
+## Measured local request telemetry
+
+The optional loopback server now exposes `GET /api/telemetry`. It retains at most 200 metadata records for local `POST /api/answer` requests after Host/Origin checks: response status, bounded mode/outcome labels, duration and finished/aborted completion. It never retains question text, source text, headers, addresses or API keys. The buffer resets with the process; eviction and retained denominators are explicit. Token usage and costs remain unknown. There is no remote collector.
+
+Run `npm run telemetry:local` to start an ephemeral loopback server, make 18 actual sequential HTTP requests over synthetic feedback and print a report. The run uses extractive mode only, makes no provider calls and closes its server. [Inspect one recorded local smoke run](docs/telemetry/local-smoke.json). Its server response-lifecycle timings are actual local observations, not simulated values, model-inference latency, browser round trips, load-test results or evidence of answer accuracy. Quantiles use nearest rank over retained completed HTTP responses, including HTTP errors; aborts are separate. The response's original `latency_ms` measures a narrower answer-computation span.
+
+GitHub Pages remains static: it serves the recorded JSON, not a live telemetry endpoint. To inspect your own local app session, start `npm start`, make requests, then open `http://127.0.0.1:8767/api/telemetry`. Do not expose this development server publicly.

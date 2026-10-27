@@ -43,7 +43,7 @@
 - [x] First official-source model review and test hypotheses.
 - [x] Offline matched-workload comparison harness, versioned development fixtures and draft quality rubric.
 - [ ] Independently reviewed, untouched task set and a blinded human-review packet.
-- [ ] Real local-app instrumentation and telemetry export; exclude raw private prompts.
+- [x] Real local-app HTTP lifecycle instrumentation and bounded metadata export; no raw prompts. A local smoke run is recorded; no live model or production results.
 - [ ] Live provider evaluation after approved server-side access and a budget are available.
 - [ ] Owner walkthrough and reviewer pilot, followed by an evidence-backed case study.
 

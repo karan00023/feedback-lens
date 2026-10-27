@@ -35,3 +35,7 @@ The coding agent implemented the provider-neutral importer/scorer, development f
 ## October 27 — citation technical note
 
 The coding agent implemented the reproducible citation counterexample, technical note and studies index. Karan requested practical research-style artifacts for interview preparation; no independent review or sole human authorship is claimed.
+
+## October 27 — local request instrumentation
+
+The coding agent implemented bounded local HTTP lifecycle telemetry, a sequential smoke runner and tests. Actual local response timings are measured over synthetic feedback; no model/provider or production traffic was observed. This supports platform observability discussion, but does not establish Karan's independent implementation/review or enterprise gateway/routing experience.

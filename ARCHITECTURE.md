@@ -39,3 +39,7 @@ The suite contains answerable and unanswerable questions. It computes per-query 
 ## Offline comparison boundary
 
 The provider-neutral comparison CLI imports already collected outputs and never invokes an API. It requires matching dataset/prompt hashes and trial counts, rejects duplicate records, and counts missing attempts against the full planned denominator. Structural citation and reference-label checks remain separate from semantic correctness, which is unreviewed. Cost and token totals stay unknown when any expected attempt has incomplete usage. Fixture responses and timing are scripted. See experiments/comparison/README.md for the import contract and limitations.
+
+## Local request observability
+
+The server records one event per local answer response: finish, or close when finish has not occurred. Timing starts after local Host/Origin validation and spans body reading, validation, answer computation and response finishing/aborting. Only fixed route/method and allowlisted mode/outcome values enter a bounded, process-local ring. GET status/static/export traffic and rejected Host/Origin requests are excluded. Export uses the same loopback/origin guards and no-store policy. Quantiles are retained-sample statistics, not lifetime metrics or a production SLO. A disconnected client is not silently counted as a completed success. Tests exercise real HTTP completion/disconnection and ensure arbitrary strings/body fields cannot enter exported records. No content or provider usage is persisted.

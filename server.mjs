@@ -1,4 +1,5 @@
 import http from 'node:http';
+import {createRequestMetrics} from './request-metrics.mjs';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
@@ -24,7 +25,8 @@ export async function liveAnswer(question,records,{key=process.env.OPENAI_API_KE
   const answer=validateAnswer(JSON.parse(text),sources);
   return {...answer,sources,mode:'live',model,usage:raw.usage?{input_tokens:raw.usage.input_tokens,output_tokens:raw.usage.output_tokens}:null};
 }
-export function createServer({records=data}={}){
+export function createServer({records=data,telemetryCapacity=200}={}){
+  const metrics=createRequestMetrics({capacity:telemetryCapacity});
   let windowStart=Date.now(),calls=0;
   return http.createServer(async(req,res)=>{
     const headers={'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Cache-Control':'no-store','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'"};
@@ -34,7 +36,17 @@ export function createServer({records=data}={}){
     if(req.headers.origin&&req.headers.origin!==`http://${host}`) return send(403,{error:'Cross-origin requests are not allowed.'});
     const url=new URL(req.url,`http://${host}`);
     if(req.method==='GET'&&url.pathname==='/api/status') return send(200,{live:!!(process.env.OPENAI_API_KEY&&process.env.OPENAI_MODEL),corpus:'synthetic-v1'});
+    if(req.method==='GET'&&url.pathname==='/api/telemetry') return send(200,metrics.snapshot());
     if(req.method==='POST'&&url.pathname==='/api/answer'){
+      const requestStart=performance.now();
+      let metricMode='unknown',metricOutcome='error',observed=false;
+      const observe=completion=>{
+        if(observed) return; observed=true;
+        metrics.record({mode:metricMode,outcome:metricOutcome,status:res.statusCode,
+          duration_ms:performance.now()-requestStart,completion});
+      };
+      res.once('finish',()=>observe('finished'));
+      res.once('close',()=>observe('aborted'));
       if(Date.now()-windowStart>60000){windowStart=Date.now();calls=0;}
       if(++calls>20) return send(429,{error:'Too many requests. Try again in a minute.'});
       if(!String(req.headers['content-type']).startsWith('application/json')) return send(415,{error:'JSON required.'});
@@ -44,9 +56,11 @@ export function createServer({records=data}={}){
         const {question,mode='extractive',channel='all'}=JSON.parse(body);
         if(typeof question!=='string'||!question.trim()||question.length>500) return send(400,{error:'Enter a question up to 500 characters.'});
         if(!['extractive','live'].includes(mode)||!['all','support','interview','survey'].includes(channel)) return send(400,{error:'Invalid filter or mode.'});
+        metricMode=mode;
         const scoped=channel==='all'?records:records.filter(r=>r.channel===channel);
         const start=performance.now();
         const answer=mode==='live'?await liveAnswer(question,scoped):baseline(question,scoped);
+        metricOutcome=answer.status;
         return send(200,{...answer,latency_ms:Math.round(performance.now()-start)});
       }catch(e){return send(502,{error:e instanceof SyntaxError?'Invalid JSON response.':e.message.includes('server-side')?e.message:'Answer unavailable. Check local configuration or provider availability.'});}
     }

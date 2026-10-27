@@ -38,3 +38,9 @@ Next: independently review dataset labels, prepare a private blinded review pack
 ## October 27 — published study preparation
 
 Added a technical-studies index and a citation-validation counterexample using the real offline harness. Two scripted claims share one valid quote; both pass automatic checks, while only the signup claim follows from the source. This is a constructed diagnostic, not model performance or independent human evaluation. The authoring agent wrote the code and article; owner review remains pending. Publication and CI must be checked before reporting the new note live.
+
+## October 27 — actual local HTTP telemetry
+
+Added bounded, process-local HTTP lifecycle instrumentation and a metadata export endpoint. A real sequential loopback smoke run at 16:49 UTC recorded 18 completed requests: 12 extractive answers, 4 abstentions and 2 deliberate validation/content-type errors. On Node v22.19.0 / macOS arm64, retained completed-response p50 was 0.334 ms and p95 2.717 ms. These are one local run's server response-lifecycle timings, including error responses, over synthetic feedback. They are not model latency, a load test, answer accuracy, production data or an SLO. The recorded JSON includes the exact sample and limits. No provider calls or token/cost measurements occurred.
+
+All 34 tests passed locally, including actual HTTP finish/disconnect handling, bounded retention, export redaction and origin rejection. The smoke runner verifies expected counts and runs in CI; timings intentionally vary. GitHub Pages serves only the recorded sample, never the local endpoint. Owner review remains pending. Publication/check status must be verified before reporting completion. This supports discussion of observability for AI platform roles; it does not establish enterprise gateway or model-routing ownership.
