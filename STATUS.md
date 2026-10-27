@@ -22,6 +22,7 @@ Ongoing work was requested by Karan as his highest priority. A heartbeat attache
 
 Added the Applied AI lab index, Telemetry Lab, an accompanying non-peer-reviewed technical report and Model Notes 001. All 20 automated tests passed locally. The sample has 480 deterministic synthetic requests; aggregate p50 is 953 / 2,543 ms (v1 / v2) while quick and deep cohort medians both improve. All costs are hypothetical. No real provider comparison or real telemetry is claimed.
 
-Local desktop and 390px mobile smoke checks covered workload filtering, rate changes, trace selection, invalid objective handling and readable metric cards. Publishing and latest workflow status should be checked on GitHub before describing this extension as live.
+Local desktop and 390px mobile smoke checks covered workload filtering, rate changes, trace selection, invalid objective handling and readable metric cards. The extension was published in commit 04b92dc8a5d2a8b35afbc476788e2113fd60ef8d. GitHub Verify prototype and Pages deployment both passed. The public Telemetry Lab loaded the full dataset and its quick-workload filter returned the expected 947 / 815 ms cohort medians. The report, lab index and model notes are included in the same deployment.
 
 Next bounded milestone: a comparison harness and quality rubric using unseen tasks, or real local telemetry instrumentation. Live model access is still unavailable; continue independent work without inventing results. Model notes should be verified from official sources and reviewed weekly, with additional notes only for significant relevant releases. Keep high-level summaries linked to underlying evidence.
+
