@@ -75,7 +75,9 @@ textarea[aria-invalid="true"] { border-color: var(--error); }
 .inline-label { font-size: 13px; color: var(--muted); margin-right: 6px; }
 .mode-pill { margin: 0; font-size: 13px; color: var(--muted); border: 1px dashed #b9c4b5; padding: 6px 10px; border-radius: 20px; }
 #ask { border: 0; background: var(--green); color: #fff; padding: 11px 16px; border-radius: 7px; font-size: 15px; font-weight: 700; }
-.examples { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 16px 0 6px; }
+.examples { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 10px 0 0; }
+.examples .small { flex-basis: 100%; margin: 4px 0 0; }
+.examples:last-of-type { margin-bottom: 6px; }
 .examples button { border: 1px solid #c4cebf; border-radius: 20px; background: #fff; color: #3c473e; padding: 6px 11px; font-size: 13px; }
 .examples button:hover { border-color: var(--green); color: var(--green); }
 
@@ -91,6 +93,17 @@ textarea[aria-invalid="true"] { border-color: var(--error); }
 .badge.live { color: #5b3b8a; background: #f0eafa; }
 .answer-question { font-family: Georgia, serif; font-size: 18px; margin: 8px 0; color: #39443b; }
 .answer-title { font-size: 16px; margin-top: 8px; }
+.handler { font-size: 12px; color: var(--muted); border: 1px solid var(--line); padding: 3px 7px; border-radius: 4px; margin-left: 4px; }
+.scope-note { font-size: 14px; background: var(--green-soft); color: var(--green); border-radius: 6px; padding: 6px 10px; margin: 0 0 8px; }
+.info { background: #eef3f8; border-radius: 8px; padding: 14px 16px; margin: 10px 0; font-size: 14px; line-height: 1.6; }
+.info h4 { font-size: 16px; }
+.suggestions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 10px 0; }
+.suggestions p { margin: 0 6px 0 0; }
+.suggestions button { border: 1px solid #b9cdb3; border-radius: 20px; background: #fff; color: var(--green); padding: 6px 11px; font-size: 13px; }
+.mini { border-collapse: collapse; font-size: 14px; margin: 6px 0 10px; width: 100%; max-width: 420px; }
+.mini th, .mini td { text-align: left; padding: 4px 8px; border-bottom: 1px solid #e5e9e1; font-variant-numeric: tabular-nums; }
+.mini thead th { color: var(--muted); font-size: 13px; }
+.claim.related blockquote { border-left-color: #d8c7a8; color: #4d574e; }
 .weak-note { background: var(--warn-soft); color: var(--warn); border-radius: 6px; padding: 8px 10px; font-size: 14px; }
 .claims { padding-left: 22px; margin: 10px 0; }
 .claim { padding: 10px 0; border-bottom: 1px solid #ebeee7; font-size: 15px; line-height: 1.6; }
@@ -192,3 +205,4 @@ input[type=search] { flex: 1 1 200px; background: #fff; border: 1px solid #b9c4b
   .site-footer { display: block; padding: 18px 16px; }
   .site-footer span { display: block; line-height: 1.8; }
 }
+.usecase-line { font-size: 14px; line-height: 1.6; background: #f5f8f2; border-radius: 8px; padding: 10px 12px; }

@@ -30,9 +30,9 @@ test('records sharing one term are listed as related but never cited', () => {
 });
 
 test('a single rare term is accepted only as a labelled weaker match', () => {
-  const answer = baseline('Why do invitations expire?', data);
+  const answer = baseline('Why is the app slow?', data);
   assert.equal(answer.retrieval.match, 'single-term');
-  assert.deepEqual(answer.sources.map(s => s.id), ['FB-002']);
+  assert.deepEqual(answer.sources.map(s => s.id), ['FB-017']);
 });
 
 test('out-of-scope questions abstain with a reason and unmatched terms', () => {
@@ -83,4 +83,12 @@ test('the local server serves every portfolio page so navigation works', async (
   } finally {
     await new Promise(resolve => server.close(resolve));
   }
+});
+
+test('the glossary connects common synonyms to corpus wording', () => {
+  assert.deepEqual(baseline('Which customers got billed two times?', data).sources.map(s => s.id), ['FB-006']);
+  assert.deepEqual(baseline("Why can't new users log in after single sign-on?", data).sources.map(s => s.id), ['FB-005']);
+  assert.deepEqual(baseline('Are there problems with removing team members?', data).sources.map(s => s.id), ['FB-022']);
+  // "saves time" must not be read as a timeout.
+  assert.ok(!baseline('Why is the app slow?', data).sources.some(s => s.id === 'FB-030'));
 });

@@ -1,4 +1,5 @@
 import {THEMES, theme, baseline, tokens} from './engine.mjs';
+import {answerQuestion} from './assistant.mjs';
 
 const $ = selector => document.querySelector(selector);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -121,61 +122,119 @@ function whyDetails(retrieval, question, open) {
       <dt>Rule applied</dt><dd>${esc(retrieval.reason)}</dd>
       ${relatedList(retrieval, question)}
     </dl>
-    <p class="small">Retrieval is keyword-based. Synonyms such as “billed” and “charged” do not match, so a missing answer can mean the wording differs, not that the feedback does not exist.</p>
+    <p class="small">Retrieval is keyword-based with a small hand-written synonym list. A missing answer can mean the wording differs, not that the feedback does not exist.</p>
   </details>`;
 }
 
+const HANDLERS = {
+  search: 'Keyword search',
+  overview: 'Overview from metadata',
+  severity: 'Urgency · authored severity',
+  requests: 'Feature requests · keyword rule',
+  praise: 'Positive feedback · keyword rule',
+  recent: 'Most recent',
+  count: 'Count by theme',
+  compare: 'Channel comparison',
+  theme: 'Theme listing',
+  related: 'Related context',
+  out_of_scope: 'Outside this library',
+  sensitive: 'Declined',
+  help: 'Help',
+};
+
+function suggestionButtons(suggestions = []) {
+  if (!suggestions.length) return '';
+  return `<div class="suggestions"><p class="small">You could ask:</p>${suggestions.map(q =>
+    `<button type="button" data-question="${esc(q)}" data-channel="${esc(channel())}">${esc(q)}</button>`).join('')}</div>`;
+}
+
+function sourceButton(record) {
+  return `<button type="button" class="cite" data-source="${esc(record.id)}">Show ${esc(record.id)} in library</button>
+    <span class="small">${esc(record.channel)} · ${esc(record.date)}</span>`;
+}
+
+function summaryTable(answer) {
+  if (answer.summary) {
+    return `<table class="mini"><thead><tr><th scope="col">Theme</th><th scope="col">Records</th><th scope="col">High severity</th></tr></thead>
+      <tbody>${answer.summary.map(t => `<tr><th scope="row">${esc(t.theme)}</th><td>${t.count}</td><td>${t.high}</td></tr>`).join('')}</tbody></table>`;
+  }
+  if (answer.channels) {
+    return `<table class="mini"><thead><tr><th scope="col">Channel</th><th scope="col">Records</th><th scope="col">High severity</th></tr></thead>
+      <tbody>${answer.channels.map(c => `<tr><th scope="row">${esc(CHANNEL_NAMES[c.channel])}</th><td>${c.count}</td><td>${c.high}</td></tr>`).join('')}</tbody></table>`;
+  }
+  return '';
+}
+
 function renderAnswer(answer, question) {
-  const scope = CHANNEL_NAMES[channel()];
+  const scopeKey = answer.scope || channel();
+  const scope = CHANNEL_NAMES[scopeKey];
   const live = answer.mode === 'live';
   const badge = live
     ? `<span class="badge live">Live LLM${answer.model ? ' · ' + esc(answer.model) : ''} · quotes validated</span>`
-    : '<span class="badge">Extractive baseline · no LLM</span>';
-  const header = `<div class="answer-header">${badge}<span class="small">Scope: ${esc(scope)}</span></div>
-    <p class="answer-question">“${esc(question)}”</p>`;
+    : '<span class="badge">Extractive · no LLM</span>';
+  const handler = HANDLERS[answer.intent] ? `<span class="handler">${HANDLERS[answer.intent]}</span>` : '';
+  const header = `<div class="answer-header"><span>${badge} ${handler}</span><span class="small">Scope: ${esc(scope)}</span></div>
+    <p class="answer-question">“${esc(question)}”</p>
+    ${answer.scope_note ? `<p class="scope-note">${esc(answer.scope_note)}</p>` : ''}`;
 
-  if (answer.status === 'insufficient_evidence') {
-    let broaden = '';
-    if (channel() !== 'all' && !live) {
-      const wider = baseline(question, state.records);
-      if (wider.status === 'answered') {
-        broaden = `<p>${plural(wider.sources.length, 'matching record')} ${wider.sources.length === 1 ? 'exists' : 'exist'} outside ${esc(scope)}.</p>
-          <button type="button" class="secondary" data-broaden>Search all channels instead</button>`;
-      }
-    }
+  if (answer.status === 'help' || answer.status === 'declined') {
     $('#answer').innerHTML = `${header}
-      <div class="abstain" role="note">
-        <h4>Not enough evidence in ${esc(scope)}.</h4>
-        <p>Feedback Lens will not guess. ${esc(answer.retrieval?.reason || 'No retrieved record supports an answer.')}</p>
-        ${broaden}
-      </div>${whyDetails(answer.retrieval, question, true)}`;
+      <div class="${answer.status === 'help' ? 'info' : 'abstain'}" role="note"><h4>${esc(answer.title)}</h4><p>${esc(answer.message)}</p></div>
+      ${suggestionButtons(answer.suggestions)}`;
     return;
   }
 
-  const weak = answer.retrieval?.match === 'single-term';
+  if (answer.status === 'insufficient_evidence') {
+    let broadenCount = answer.broaden || 0;
+    if (live && scopeKey !== 'all') broadenCount = baseline(question, state.records).sources.length;
+    const broaden = broadenCount && scopeKey !== 'all'
+      ? `<p>${plural(broadenCount, 'matching record')} ${broadenCount === 1 ? 'exists' : 'exist'} outside ${esc(scope)}.</p>
+         <button type="button" class="secondary" data-broaden>Search all channels instead</button>` : '';
+    const related = (answer.related_records || []).map(r =>
+      `<li class="claim related"><blockquote>${esc(r.text)}</blockquote><div class="cite-row">${sourceButton(r)}</div></li>`).join('');
+    $('#answer').innerHTML = `${header}
+      <div class="abstain" role="note">
+        <h4>${esc(answer.title || `Not enough evidence in ${scope}.`)}</h4>
+        <p>${esc(answer.message || `Feedback Lens will not guess. ${answer.retrieval?.reason || ''}`)}</p>
+        ${broaden}
+      </div>
+      ${related ? `<h4 class="answer-title">Related feedback (context, not an answer)</h4><ol class="claims">${related}</ol>` : ''}
+      ${suggestionButtons(answer.suggestions)}
+      ${whyDetails(answer.retrieval, question, !related)}`;
+    return;
+  }
+
+  const isSearch = !answer.intent || answer.intent === 'search';
+  const weak = isSearch && answer.retrieval?.match === 'single-term';
   const sourceById = new Map(answer.sources.map(s => [s.id, s]));
   const claims = answer.claims.map(claim => {
-    const cites = claim.evidence.map(e => {
-      const source = sourceById.get(e.source_id);
-      return `<button type="button" class="cite" data-source="${esc(e.source_id)}">Show ${esc(e.source_id)} in library</button>
-        <span class="small">${source ? esc(source.channel) + ' · ' + esc(source.date) : ''}</span>`;
-    }).join(' ');
+    const cites = claim.evidence.map(e => sourceById.get(e.source_id)
+      ? sourceButton(sourceById.get(e.source_id))
+      : `<button type="button" class="cite" data-source="${esc(e.source_id)}">Show ${esc(e.source_id)} in library</button>`).join(' ');
+    const source = sourceById.get(claim.evidence[0].source_id);
     const body = live
       ? `<p>${esc(claim.text)}</p>${claim.evidence.map(e => `<blockquote>${esc(e.quote)}</blockquote>`).join('')}`
-      : `<blockquote>${highlight(claim.text, sourceById.get(claim.evidence[0].source_id)?.matched_terms)}</blockquote>`;
+      : `<blockquote>${isSearch ? highlight(claim.text, source?.matched_words) : esc(claim.text)}</blockquote>
+         ${!isSearch && source ? `<span class="tag${source.severity === 'high' ? ' high' : ''}">${esc(source.severity)} severity</span> <span class="tag">${theme(source)}</span>` : ''}`;
     return `<li class="claim">${body}<div class="cite-row">${cites}</div></li>`;
   }).join('');
 
+  const explanation = live
+    ? 'Claims are model-written. Each quote was checked to appear exactly in a retrieved record; whether the claim follows from it still needs human review.'
+    : isSearch
+      ? 'These are the matching records quoted word for word, strongest match first. Highlighted words matched your question. Nothing is summarized or inferred.'
+      : `${esc(answer.rule)} Records are quoted word for word; nothing is generated.`;
+
   $('#answer').innerHTML = `${header}
-    <h4 class="answer-title">${evidenceSummary(answer.sources)}</h4>
+    <h4 class="answer-title">${isSearch || live ? evidenceSummary(answer.sources) : esc(answer.title)}</h4>
+    ${summaryTable(answer)}
     ${weak ? '<p class="weak-note">Weaker match: each record shares only one term with the question. Read the quotes before relying on them.</p>' : ''}
-    <p class="small">${live
-      ? 'Claims are model-written. Each quote was checked to appear exactly in a retrieved record; whether the claim follows from it still needs human review.'
-      : 'These are the matching records quoted word for word, strongest match first. Highlighted words matched your question. Nothing is summarized or inferred.'}</p>
+    <p class="small">${explanation}</p>
     <ol class="claims">${claims}</ol>
-    ${answer.retrieval?.related?.length ? `<p class="small">${plural(answer.retrieval.related.length, 'other record')} share${answer.retrieval.related.length === 1 ? 's' : ''} a term with the question but did not meet the evidence rule. They are listed under “Why this result?”, not cited.</p>` : ''}
+    ${answer.more ? `<p class="small">${plural(answer.more, 'more record')} not shown. Use the library filters to see them all.</p>` : ''}
+    ${isSearch && answer.retrieval?.related?.length ? `<p class="small">${plural(answer.retrieval.related.length, 'other record')} share${answer.retrieval.related.length === 1 ? 's' : ''} a term with the question but did not meet the evidence rule. They are listed under “Why this result?”, not cited.</p>` : ''}
     ${live && answer.usage ? `<p class="small">Tokens: ${answer.usage.input_tokens} in / ${answer.usage.output_tokens} out.</p>` : ''}
-    ${whyDetails(answer.retrieval, question, false)}`;
+    ${isSearch ? whyDetails(answer.retrieval, question, false) : ''}`;
 }
 
 function showQuestionError(message) {
@@ -195,7 +254,7 @@ async function getAnswer(question) {
     if (!response.ok) throw new Error(payload.error || `The local server returned ${response.status}.`);
     return payload;
   }
-  return baseline(question, scopedRecords());
+  return answerQuestion(question, state.records, {channel: channel()});
 }
 
 async function ask({focus = true} = {}) {
@@ -220,9 +279,10 @@ async function ask({focus = true} = {}) {
     renderAnswer(answer, question);
     renderLibrary();
     updateUrl();
-    announce(answer.status === 'answered'
-      ? `${plural(answer.sources.length, 'matching record')} found in ${CHANNEL_NAMES[channel()]}.`
-      : `Not enough evidence in ${CHANNEL_NAMES[channel()]}.`);
+    const scopeName = CHANNEL_NAMES[answer.scope || channel()];
+    announce(answer.title || (answer.status === 'answered'
+      ? `${plural(answer.sources.length, 'matching record')} found in ${scopeName}.`
+      : `Not enough evidence in ${scopeName}.`));
     if (focus) $('#answer').focus({preventScroll: true});
   } catch (error) {
     $('#answer').innerHTML = `<div class="answer-error" role="alert"><h4>The answer could not be produced.</h4>
@@ -367,21 +427,25 @@ async function loadEvaluation() {
       ['Correct answer/abstain decision', 'abstention_accuracy', pct],
       ['Off-target records returned', 'irrelevant_retrieved', n => String(n)],
     ];
-    const tables = Object.entries(report.summary).map(([set, s]) => `
+    const tables = Object.entries(report.summary).filter(([set]) => set !== 'usecases').map(([set, s]) => `
       <table>
         <caption>${set === 'development' ? 'Development set' : 'Challenge set'} · ${s.current.cases} queries (${s.current.answerable_cases} answerable, ${s.current.unanswerable_cases} should abstain)</caption>
-        <thead><tr><th scope="col">Metric</th><th scope="col">Original baseline</th><th scope="col">Current</th></tr></thead>
-        <tbody>${metrics.map(([label, key, f]) => `<tr><th scope="row">${label}</th><td>${f(s.baseline[key])}</td><td>${f(s.current[key])}</td></tr>`).join('')}</tbody>
+        <thead><tr><th scope="col">Metric</th><th scope="col">Original v1</th><th scope="col">Retriever now</th><th scope="col">Workspace</th></tr></thead>
+        <tbody>${metrics.map(([label, key, f]) => `<tr><th scope="row">${label}</th><td>${f(s.baseline[key])}</td><td>${f(s.current[key])}</td><td>${f(s.assistant[key])}</td></tr>`).join('')}</tbody>
       </table>`).join('');
     const changed = report.outcomes.filter(o => o.change !== 'unchanged');
-    const failures = report.outcomes.filter(o => !o.current.abstention_correct || (!o.expect_abstain && o.current.recall_at_5 < 1));
+    // Remaining failures are judged on what the workspace returns.
+    const failures = report.outcomes.filter(o => !o.assistant.abstention_correct || (!o.expect_abstain && o.assistant.recall_at_5 < 1));
     const row = o => `<strong>${esc(o.id)}</strong> ${esc(o.question)}${o.channel !== 'all' ? ` <span class="small">(${esc(o.channel)})</span>` : ''}<br>
-      <span class="small">expected ${o.relevant_ids.length ? esc(o.relevant_ids.join(', ')) : 'abstain'} · original ${esc(o.baseline.retrieved_ids.join(', ') || 'abstained')} · current ${esc(o.current.retrieved_ids.join(', ') || 'abstained')}</span>`;
+      <span class="small">expected ${o.relevant_ids.length ? esc(o.relevant_ids.join(', ')) : 'abstain'} · original ${esc(o.baseline.retrieved_ids.join(', ') || 'abstained')} · retriever ${esc(o.current.retrieved_ids.join(', ') || 'abstained')} · workspace ${esc(o.assistant.retrieved_ids.join(', ') || 'abstained')}</span>`;
+    const uc = report.summary.usecases;
+    const usecaseFails = report.usecases.filter(u => !u.passed);
     target.innerHTML = `${tables}
+      <p class="usecase-line"><strong>${uc.passed} of ${uc.cases}</strong> use-case questions (overviews, urgency, requests, praise, themes, counts, help, sensitive and out-of-scope) were handled as specified before the router was built.${usecaseFails.length ? ' Failures: ' + usecaseFails.map(u => esc(u.id)).join(', ') + '.' : ''}</p>
       <details><summary>${plural(changed.length, 'query')} changed between versions</summary>
         <ul class="outcomes">${changed.map(o => `<li><span class="change ${o.change}">${o.change}</span> ${row(o)}</li>`).join('')}</ul></details>
       <details><summary>${plural(failures.length, 'query')} still fail</summary><ul class="outcomes">${failures.map(o => `<li>${row(o)}</li>`).join('')}</ul></details>
-      <p class="small">Neither set is held out: both were written by the project author with AI assistance, and some retriever changes were made after seeing challenge-set failures. Higher numbers here are diagnostic, not proof of better answers.</p>`;
+      <p class="small">“Workspace” is what you get above: search plus rule-based listings. None of these sets is held out: all were written with AI assistance by the project author, and the synonym list and some rules were adjusted after seeing failures. Treat the numbers as diagnostics, not proof of better answers.</p>`;
   } catch {
     target.innerHTML = '<p class="empty">The evaluation report could not be loaded. Run <code>npm run evaluate</code> locally to regenerate it.</p>';
   } finally {

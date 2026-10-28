@@ -18,6 +18,7 @@
 - [x] Useful loading, failed-load, empty, weaker-match and abstention states.
 - [x] Local server serves every portfolio page; consistent light theme across pages.
 - [x] Automated browser workflow checks at desktop and mobile widths.
+- [x] Answer common question types (overview, urgency, requests, praise, themes, recency, counts, channel comparison, help, sensitive) without dead ends.
 - [ ] Verify the published site from a network that can reach GitHub Pages after each release.
 
 ## Priority 2 — Measure the AI improvement

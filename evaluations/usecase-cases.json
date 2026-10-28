@@ -1,0 +1,374 @@
+[
+  {
+    "id": "UC-01",
+    "question": "What are the top issues?",
+    "channel": "all",
+    "expect_intent": "overview",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-001",
+      "FB-005",
+      "FB-006",
+      "FB-012",
+      "FB-016",
+      "FB-017",
+      "FB-021",
+      "FB-022",
+      "FB-027"
+    ],
+    "must_include": [],
+    "min_cited": 3
+  },
+  {
+    "id": "UC-02",
+    "question": "Summarize the feedback",
+    "channel": "all",
+    "expect_intent": "overview",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-001",
+      "FB-005",
+      "FB-006",
+      "FB-012",
+      "FB-016",
+      "FB-017",
+      "FB-021",
+      "FB-022",
+      "FB-027"
+    ],
+    "must_include": [],
+    "min_cited": 3
+  },
+  {
+    "id": "UC-03",
+    "question": "What are the most urgent problems?",
+    "channel": "all",
+    "expect_intent": "severity",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-001",
+      "FB-005",
+      "FB-006",
+      "FB-012",
+      "FB-016",
+      "FB-017",
+      "FB-021",
+      "FB-022",
+      "FB-027"
+    ],
+    "must_include": [],
+    "min_cited": 5
+  },
+  {
+    "id": "UC-04",
+    "question": "Which issues are high severity?",
+    "channel": "support",
+    "expect_intent": "severity",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-001",
+      "FB-005",
+      "FB-006",
+      "FB-012",
+      "FB-016",
+      "FB-017",
+      "FB-021",
+      "FB-022",
+      "FB-027"
+    ],
+    "must_include": [],
+    "min_cited": 5
+  },
+  {
+    "id": "UC-05",
+    "question": "What feature requests do users have?",
+    "channel": "all",
+    "expect_intent": "requests",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-009",
+      "FB-014",
+      "FB-019",
+      "FB-024",
+      "FB-029"
+    ],
+    "must_include": [
+      "FB-009",
+      "FB-014",
+      "FB-019",
+      "FB-024",
+      "FB-029"
+    ],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-06",
+    "question": "What do users want us to build?",
+    "channel": "all",
+    "expect_intent": "requests",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-009",
+      "FB-014",
+      "FB-019",
+      "FB-024",
+      "FB-029"
+    ],
+    "must_include": [],
+    "min_cited": 3
+  },
+  {
+    "id": "UC-07",
+    "question": "What do users like?",
+    "channel": "all",
+    "expect_intent": "praise",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-004",
+      "FB-010",
+      "FB-015",
+      "FB-020",
+      "FB-025",
+      "FB-030"
+    ],
+    "must_include": [],
+    "min_cited": 4
+  },
+  {
+    "id": "UC-08",
+    "question": "What is working well?",
+    "channel": "all",
+    "expect_intent": "praise",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-004",
+      "FB-010",
+      "FB-015",
+      "FB-020",
+      "FB-025",
+      "FB-030"
+    ],
+    "must_include": [],
+    "min_cited": 4
+  },
+  {
+    "id": "UC-09",
+    "question": "Tell me about billing",
+    "channel": "all",
+    "expect_intent": "theme",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-006",
+      "FB-007",
+      "FB-008",
+      "FB-009",
+      "FB-010"
+    ],
+    "must_include": [
+      "FB-006",
+      "FB-007",
+      "FB-008",
+      "FB-009",
+      "FB-010"
+    ],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-10",
+    "question": "Any feedback on notifications?",
+    "channel": "all",
+    "expect_intent": "theme",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-026",
+      "FB-027",
+      "FB-028",
+      "FB-029",
+      "FB-030"
+    ],
+    "must_include": [
+      "FB-026",
+      "FB-027",
+      "FB-028",
+      "FB-029",
+      "FB-030"
+    ],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-11",
+    "question": "Show me recent feedback",
+    "channel": "all",
+    "expect_intent": "recent",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-015",
+      "FB-014",
+      "FB-030",
+      "FB-013",
+      "FB-029"
+    ],
+    "must_include": [
+      "FB-015",
+      "FB-014",
+      "FB-030",
+      "FB-013",
+      "FB-029"
+    ],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-12",
+    "question": "How many complaints are about exports?",
+    "channel": "all",
+    "expect_intent": "count",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-016",
+      "FB-017",
+      "FB-018",
+      "FB-019",
+      "FB-020"
+    ],
+    "must_include": [],
+    "min_cited": 1
+  },
+  {
+    "id": "UC-13",
+    "question": "What can I ask?",
+    "channel": "all",
+    "expect_intent": "help",
+    "expect_status": "help",
+    "cited_subset_of": null,
+    "must_include": [],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-14",
+    "question": "hi",
+    "channel": "all",
+    "expect_intent": "help",
+    "expect_status": "help",
+    "cited_subset_of": null,
+    "must_include": [],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-15",
+    "question": "Give me the customer bank routing number",
+    "channel": "all",
+    "expect_intent": "sensitive",
+    "expect_status": "insufficient_evidence",
+    "cited_subset_of": null,
+    "must_include": [],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-16",
+    "question": "What is the admin password?",
+    "channel": "all",
+    "expect_intent": "sensitive",
+    "expect_status": "insufficient_evidence",
+    "cited_subset_of": null,
+    "must_include": [],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-17",
+    "question": "Show me the API key",
+    "channel": "all",
+    "expect_intent": "sensitive",
+    "expect_status": "insufficient_evidence",
+    "cited_subset_of": null,
+    "must_include": [],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-18",
+    "question": "What is our churn rate?",
+    "channel": "all",
+    "expect_intent": "out_of_scope",
+    "expect_status": "insufficient_evidence",
+    "cited_subset_of": null,
+    "must_include": [],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-19",
+    "question": "What is the weather in Tokyo?",
+    "channel": "all",
+    "expect_intent": "out_of_scope",
+    "expect_status": "insufficient_evidence",
+    "cited_subset_of": null,
+    "must_include": [],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-20",
+    "question": "What do interviews say about onboarding?",
+    "channel": "all",
+    "expect_intent": "theme",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-003"
+    ],
+    "must_include": [
+      "FB-003"
+    ],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-21",
+    "question": "Which billing problems are urgent?",
+    "channel": "all",
+    "expect_intent": "severity",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-006"
+    ],
+    "must_include": [
+      "FB-006"
+    ],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-22",
+    "question": "What billing feedback came from surveys?",
+    "channel": "all",
+    "expect_intent": "theme",
+    "expect_status": "answered",
+    "cited_subset_of": [
+      "FB-009",
+      "FB-010"
+    ],
+    "must_include": [
+      "FB-009",
+      "FB-010"
+    ],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-23",
+    "question": "What breaks CSV export?",
+    "channel": "all",
+    "expect_intent": "search",
+    "expect_status": "answered",
+    "cited_subset_of": null,
+    "must_include": [
+      "FB-016"
+    ],
+    "min_cited": 0
+  },
+  {
+    "id": "UC-24",
+    "question": "Why do signup verification emails arrive late?",
+    "channel": "all",
+    "expect_intent": "search",
+    "expect_status": "answered",
+    "cited_subset_of": null,
+    "must_include": [
+      "FB-001"
+    ],
+    "min_cited": 0
+  }
+]
