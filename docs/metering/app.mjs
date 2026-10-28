@@ -5,7 +5,7 @@ const notes={clean:"Six synthetic events, including one failure and one abort.",
 function scenario(){const k=$("scenario").value;events=structuredClone(SAMPLE);if(k==="retry")events.push({...SAMPLE[0]});if(k==="conflict")events.push({...SAMPLE[1],outputTokens:1});if(k==="unknown")events.push({...SAMPLE[0],eventId:"e7",requestId:"r7",model:"new-model"});$("scenario-note").textContent=notes[k];$("events").value=JSON.stringify(events,null,2);$("signoffs").checked=false;$("import-status").textContent="";render();}
 function li(parent,text){const el=document.createElement("li");el.textContent=text;parent.append(el);}
 function budgetCents(){const s=$("budget").value;if(!/^\d+(\.\d{1,2})?$/.test(s))throw new Error("Enter a non-negative budget with at most two decimal places.");const [whole,frac=""]=s.split(".");return Number(whole)*100+Number(frac.padEnd(2,"0"));}
-function render(){try{
+function render(){ $("packet").value="";$("evidence-panel").open=false;$("evidence-status").textContent="Generate a fresh packet after changing replay configuration.";try{
   const multiplier=Number($("pricing").value);$("pricing-label").textContent=multiplier+"%";
   report=reconcile(events,{budgetCents:budgetCents(),multiplier,signoffs:$("signoffs").checked});
   $("error").textContent="";$("export").disabled=false;
