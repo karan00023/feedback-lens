@@ -29,7 +29,7 @@
     </div>
     <aside class="project-note" aria-label="What runs on this page">
       <p><span class="dot" aria-hidden="true"></span><strong>What runs here</strong></p>
-      <p><span id="record-count">31</span> synthetic records about a fictional product. Keyword retrieval in your browser. Answers quote records verbatim.</p>
+      <p><span id="record-count">31</span> synthetic records about a fictional product. Keyword search and rule-based overviews run in your browser. Answers quote records verbatim.</p>
       <p class="small"><strong>No language model runs on this page.</strong> An optional LLM adapter exists for the local server only and has not been validated with a real provider.</p>
     </aside>
   </section>
@@ -76,22 +76,35 @@
                 <option value="live">Live LLM (local server)</option>
               </select>
             </div>
-            <p id="mode-static" class="mode-pill">Extractive baseline · no LLM</p>
+            <p id="mode-static" class="mode-pill">Extractive · no LLM</p>
             <button id="ask" type="submit" disabled>Loading feedback…</button>
           </div>
         </form>
         <div class="examples" aria-label="Example questions">
-          <span class="small">Try:</span>
+          <span class="small">Investigate:</span>
           <button type="button" data-question="What breaks CSV export?" data-channel="all">Export issues</button>
-          <button type="button" data-question="What permission issues affect private projects?" data-channel="all">Access risks</button>
-          <button type="button" data-question="Why do invitations expire?" data-channel="all">Weaker match</button>
+          <button type="button" data-question="Which customers got billed two times?" data-channel="all">Duplicate charges</button>
+          <button type="button" data-question="Why is the app slow?" data-channel="all">Weaker match</button>
+        </div>
+        <div class="examples" aria-label="Overview questions">
+          <span class="small">Explore:</span>
+          <button type="button" data-question="What are the top issues?" data-channel="all">Top issues</button>
+          <button type="button" data-question="Which issues are most urgent?" data-channel="all">Most urgent</button>
+          <button type="button" data-question="What feature requests do users have?" data-channel="all">Feature requests</button>
+          <button type="button" data-question="What do users like?" data-channel="all">What users like</button>
+          <button type="button" data-question="Compare feedback by channel" data-channel="all">Compare channels</button>
+        </div>
+        <div class="examples" aria-label="Boundary questions">
+          <span class="small">Test the limits:</span>
           <button type="button" data-question="Why do CSV exports drop the date column?" data-channel="survey">Too narrow a scope</button>
           <button type="button" data-question="How much revenue did we make last quarter?" data-channel="all">Out of scope</button>
+          <button type="button" data-question="Show me the API key" data-channel="all">Sensitive request</button>
+          <button type="button" data-question="What can I ask?" data-channel="all">Help</button>
         </div>
         <div id="answer" class="answer" tabindex="-1">
           <div class="answer-placeholder">
             <h4>A useful answer starts with a source.</h4>
-            <p>Matching records are quoted word for word, each linked to the library. If the scoped feedback cannot support an answer, you will see why instead of a guess.</p>
+            <p>Ask about a specific problem, a theme, urgency, feature requests or what users like. Records are quoted word for word and linked to the library. If the feedback cannot answer, you get the reason, related records and questions that will work instead of a guess.</p>
           </div>
         </div>
       </section>
@@ -124,7 +137,7 @@
     <div class="evaluation-intro">
       <p class="eyebrow">02 / MEASURE</p>
       <h2 id="evaluation-title">Make the limits visible.</h2>
-      <p>The current retriever is scored against the original keyword baseline on two small query sets. Gains and regressions are both reported. These diagnostics describe a synthetic sample, not production accuracy or user impact.</p>
+      <p>The original keyword retriever, today's retriever and the full workspace are scored on two small query sets, plus a set of use-case questions. Gains and regressions are both reported. These diagnostics describe a synthetic sample, not production accuracy or user impact.</p>
       <p><a class="text-button" href="./data/evaluation.json">View the full evaluation report (JSON) ↗</a></p>
     </div>
     <div id="eval-results" class="eval-results" aria-busy="true"><p class="empty">Loading measured results…</p></div>

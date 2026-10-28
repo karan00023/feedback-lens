@@ -41,7 +41,7 @@ try {
     });
     await check(`${label}: an example produces a cited extractive answer`, async () => {
       await page.click('text=Export issues');
-      assert.match(await text('#answer'), /Extractive baseline · no LLM/i);
+      assert.match(await text('#answer'), /Extractive · no LLM/i);
       assert.equal(await page.locator('#answer .cite').count(), 1);
     });
     await check(`${label}: a citation reveals its record even when library filters hide it`, async () => {
@@ -57,7 +57,8 @@ try {
     await check(`${label}: changing the channel re-runs the question in the new scope`, async () => {
       await page.selectOption('#channel', 'interview');
       await page.waitForFunction(() => document.querySelector('#answer').textContent.includes('interviews'));
-      assert.match(await text('#answer'), /Not enough evidence in interviews/);
+      assert.match(await text('#answer'), /No record in interviews answers this directly/);
+      assert.equal(await page.locator('#answer .claim:not(.related)').count(), 0);
     });
     await check(`${label}: an over-narrow scope offers to broaden and then answers`, async () => {
       await page.click('text=Too narrow a scope');
@@ -69,16 +70,34 @@ try {
     await check(`${label}: an unsupported question abstains and explains why`, async () => {
       await page.click('text=Out of scope');
       const answer = await text('#answer');
-      assert.match(answer, /Not enough evidence/);
-      assert.match(answer, /revenue/);
+      assert.match(answer, /No feedback in all channels answers this/);
+      assert.match(answer, /You could ask/);
       assert.equal(await page.locator('#answer .cite').count(), 0);
+    });
+    await check(`${label}: overview, request and sensitive questions get useful responses`, async () => {
+      await page.click('text=Top issues');
+      assert.match(await text('#answer'), /ranked by high-severity records/);
+      assert.ok(await page.locator('#answer .cite').count() >= 3);
+      await page.click('text=Feature requests');
+      assert.equal(await page.locator('#answer .cite').count(), 5);
+      await page.click('text=Sensitive request');
+      assert.match(await text('#answer'), /does not hold credentials/);
+      await page.click('#answer .suggestions button >> nth=0');
+      assert.match(await text('#answer'), /Overview from metadata/);
+    });
+    await check(`${label}: a question naming a channel narrows its scope and says so`, async () => {
+      await page.fill('#question', 'What billing feedback came from surveys?');
+      await page.click('#ask');
+      assert.match(await text('#answer'), /mentions surveys/);
+      assert.equal(await page.locator('#answer .cite').count(), 2);
     });
     await check(`${label}: question input is capped at 500 characters`, async () => {
       await page.fill('#question', 'x'.repeat(600));
       assert.equal((await page.inputValue('#question')).length, 500);
     });
     await check(`${label}: evaluation compares baseline and current versions`, async () => {
-      assert.match(await text('#eval-results'), /Original baseline.*Current/);
+      assert.match(await text('#eval-results'), /Original v1.*Workspace/);
+      assert.match(await text('#eval-results'), /24 of 24 use-case questions/);
     });
     await check(`${label}: no horizontal page scroll and no script errors`, async () => {
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true);

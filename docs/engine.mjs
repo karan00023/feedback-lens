@@ -1,6 +1,6 @@
 // Shared by the browser demo, local server, tests and evaluation runner.
-// Retrieval is lexical: it matches word stems weighted by rarity (IDF). It does not
-// understand synonyms, so "billed" will not find "charged".
+// Retrieval is lexical: it matches word stems weighted by rarity (IDF), plus a small
+// hand-written glossary of product synonyms. It does not understand meaning.
 
 // Words that frame a question rather than describe a product problem.
 const STOP_WORDS = new Set(`a an the and or to of in on for with from by as at is are was were be been
@@ -22,8 +22,39 @@ export function stem(word) {
   return word.endsWith('e') && word.length > 3 ? word.slice(0, -1) : word;
 }
 
+// Multi-word phrases rewritten to one word before tokenizing.
+const PHRASES = [
+  [/\btwo times\b/g, 'twice'],
+  [/\b(times?|timed|timing) out\b|\btimeouts?\b/g, 'timeout'],
+  [/\bsingle sign[- ]?on\b/g, 'sso'],
+  [/\b(log|sign)[- ]in\b/g, 'login'],
+  [/\bsign[- ]up\b/g, 'signup'],
+  [/\bteam ?members?\b/g, 'teammate'],
+];
+
+// Curated synonyms (stems). Each group matches any of its members. Written for this
+// corpus's vocabulary and documented in evaluations/ASSISTANT.md; not learned.
+const SYNONYM_GROUPS = [
+  ['bill', 'charg'],
+  ['twic', 'duplicat', 'doubl'],
+  ['teammat', 'member', 'colleagu', 'coworker'],
+  ['invit', 'invitation'],
+  ['notification', 'alert', 'notif'],
+  ['remov', 'delet'],
+  ['login', 'signin'],
+  ['slow', 'lag', 'delay', 'lat', 'timeout'],
+];
+const SYNONYMS = new Map(SYNONYM_GROUPS.flatMap(group => group.map(t => [t, group])));
+export const alternatives = term => SYNONYMS.get(term) || [term];
+
+export function normalize(text) {
+  let s = String(text).toLowerCase();
+  for (const [pattern, replacement] of PHRASES) s = s.replace(pattern, replacement);
+  return s;
+}
+
 export function tokens(text) {
-  const words = String(text).toLowerCase().replace(/'s\b/g, '').match(/[a-z0-9]+/g) || [];
+  const words = normalize(text).replace(/'s\b/g, '').match(/[a-z0-9]+/g) || [];
   return [...new Set(words.filter(w => w.length > 2 && !STOP_WORDS.has(w)).map(stem))];
 }
 
@@ -43,14 +74,17 @@ export function explainRetrieval(question, records, {limit = RETRIEVAL.limit} = 
   if (!records.length) return empty('No feedback records are in the selected scope.');
 
   const recordTerms = records.map(r => new Set(tokens(r.text)));
-  const docFrequency = t => recordTerms.filter(s => s.has(t)).length;
+  // A query term matches a record when the record contains the term or a glossary synonym.
+  const hit = (t, i) => alternatives(t).find(a => recordTerms[i].has(a));
+  const docFrequency = t => records.filter((_, i) => hit(t, i)).length;
   const weight = new Map(terms.map(t => [t, Math.log(1 + records.length / (1 + docFrequency(t)))]));
   const totalWeight = terms.reduce((n, t) => n + weight.get(t), 0);
 
   const candidates = records.map((record, i) => {
-    const matched = terms.filter(t => recordTerms[i].has(t));
+    const matched = terms.filter(t => hit(t, i));
     const score = matched.reduce((n, t) => n + weight.get(t), 0) / totalWeight;
-    return {...record, score: +score.toFixed(4), matched_terms: matched};
+    // matched_words are the record's own stems, used to highlight the quote.
+    return {...record, score: +score.toFixed(4), matched_terms: matched, matched_words: matched.map(t => hit(t, i))};
   }).filter(r => r.matched_terms.length)
     .sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
 
@@ -66,7 +100,7 @@ export function explainRetrieval(question, records, {limit = RETRIEVAL.limit} = 
   const related = candidates.filter(r => !sources.includes(r)).slice(0, limit)
     .map(({id, score, matched_terms}) => ({id, score, matched_terms}));
 
-  const missing = terms.filter(t => !records.some((_, i) => recordTerms[i].has(t)));
+  const missing = terms.filter(t => !records.some((_, i) => hit(t, i)));
   if (!sources.length) {
     const partial = candidates.length
       ? `${candidates.length} record${candidates.length === 1 ? '' : 's'} shared a single term, but not enough of the question to count as evidence.`

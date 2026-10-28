@@ -43,3 +43,7 @@ The coding agent implemented bounded local HTTP lifecycle telemetry, a sequentia
 ## October 27 — workflow completion and retrieval v2
 
 At Karan's request, the coding agent audited the project and implemented the workspace rebuild, retrieval v2, the challenge query set, the side-by-side evaluation, browser workflow checks, the local static-file server change, the shared lab palette and the related documentation. Karan has not yet reviewed these changes. The challenge queries and relevance labels were written by the agent, not independent annotators.
+
+## October 28 — question router and retrieval v3
+
+Karan asked for more use cases and for questions not to end in bare "doesn't exist" responses. The coding agent wrote the use-case set, router, glossary, tests, UI changes and notes. Karan has not yet reviewed them.

@@ -56,3 +56,11 @@ Retrieval v2 was evaluated against the frozen v1 baseline on the 18 development 
 Tests: 44 `node --test` tests pass (10 new: stemming, evidence rule, related records, weaker match, abstention reasons, channel scope, empty scope, live-mode explanation, static-file confinement, local page serving). `npm run test:browser` passed 24/24 Chromium checks at 1280×900 and 390×844 against the local Node server. CI steps (smoke run, deterministic telemetry, comparison fixtures, citation study, and the new evaluation-report diff check) pass locally on Node v22.22.0 / Linux.
 
 Not verified in this session: the deployed GitHub Pages site, because the authoring environment could not reach github.io. Run `BASE_URL=https://karan00023.github.io/feedback-lens/ npm run test:browser` after publication. Live LLM mode, screen-reader software, Safari/Firefox and real devices were not tested. Model Notes 001 vendor claims were not re-verified.
+
+## October 28, 2026 — more question types and no dead ends
+
+Karan asked that people asking questions should not hit bare "this doesn't exist" responses. Added a deterministic question router and retrieval v3 with a hand-written synonym glossary (see `evaluations/ASSISTANT.md`). The 24-question use-case set was committed before the router was built. All 24 now pass, after two rule fixes made following the first run.
+
+Workspace results: development recall@5 83% with 100% correct answer/abstain decisions; challenge recall@5 88% with 96%. A synonym introduced one development regression (Q-11). Eight development or challenge queries still fall short. All three sets are author-written and partly tuned against, so these are optimistic diagnostics.
+
+Tests: 56 `node --test` tests pass. `npm run test:browser` passed 28/28 Chromium checks at desktop and mobile widths against the local server. Not verified: the deployed site from this environment, live LLM mode, and non-English questions (these get the out-of-library response).

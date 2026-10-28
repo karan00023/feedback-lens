@@ -20,7 +20,19 @@ GitHub Pages hosts only `docs/`. Browser queries run locally against the bundled
 
 `docs/engine.mjs` is imported by the browser, local server, tests and evaluation runner. It removes question-framing stop words, strips common word endings, weights each query term by inverse document frequency within the selected channel, and cites up to five records that contain at least two query terms. Only when no record qualifies does it accept a single rare term carrying at least 40% of the question's weight, and the UI labels that a weaker match. Scores are ranking heuristics, not probabilities or confidence estimates.
 
-Every result carries an explanation (searched terms, terms absent from the scope, the rule applied, and related records that were not cited) so the UI can say why it answered or abstained. Lexical matching still misses synonym pairs such as “duplicate charges” and “charged twice”. The original v1 retriever is frozen in `evaluations/lexical-v1.mjs`; `npm run evaluate` scores both on the development and challenge sets (see `evaluations/RETRIEVAL-V2.md`). Semantic retrieval is a next milestone, not an implemented feature.
+Every result carries an explanation (searched terms, terms absent from the scope, the rule applied, and related records that were not cited) so the UI can say why it answered or abstained. Version 3 adds a small hand-written glossary (for example bill ~ charge, team member ~ teammate, slow ~ timeout); synonyms outside it are still missed. The original v1 retriever is frozen in `evaluations/lexical-v1.mjs`; `npm run evaluate` scores both on the development and challenge sets (see `evaluations/RETRIEVAL-V2.md`). Semantic retrieval is a next milestone, not an implemented feature.
+
+## Question router
+
+`docs/assistant.mjs` sits on top of the engine and is shared by the browser and the local server. It handles each question in this order:
+
+1. Decline requests for credentials or financial data.
+2. Answer help and greeting questions.
+3. Search first when the question names something specific.
+4. Otherwise answer from metadata: overview, urgency, requests, praise, recency, counts, channel comparison or a theme listing.
+5. Failing that, return an explicit non-answer with related context and suggested questions.
+
+Listings use authored labels and explicit keyword rules, exclude the injection-test fixture and quote records verbatim, so they pass the same citation validator. Facet listings are skipped when the question names something no record mentions. This keeps the product useful without a model while remaining inspectable. It is not natural-language understanding, and English keyword patterns will misroute some questions. In live mode the router selects the records and the model only writes claims about them.
 
 ## Scope versus library filters
 

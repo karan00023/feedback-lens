@@ -3,12 +3,14 @@
   "corpus_records": 31,
   "systems": {
     "baseline": "lexical-v1: original token-overlap retriever (frozen in evaluations/lexical-v1.mjs)",
-    "current": "Current docs/engine.mjs retriever used by the hosted demo"
+    "current": "Current docs/engine.mjs retriever on its own",
+    "assistant": "docs/assistant.mjs question router used by the workspace (search plus listing handlers)"
   },
   "evaluation_type": "Development diagnostics; neither set is an independent held-out benchmark",
   "sets": {
     "development": "evaluations/cases.json — 18 queries visible while the original baseline was built",
-    "challenge": "evaluations/challenge-cases.json — 24 paraphrased, channel-scoped and unanswerable queries written and committed before retrieval changes, by the same AI-assisted author"
+    "challenge": "evaluations/challenge-cases.json — 24 paraphrased, channel-scoped and unanswerable queries written and committed before retrieval changes, by the same AI-assisted author",
+    "usecases": "evaluations/usecase-cases.json — 24 questions with expected handling, committed before the router was built"
   },
   "summary": {
     "development": {
@@ -25,9 +27,18 @@
         "cases": 18,
         "answerable_cases": 13,
         "unanswerable_cases": 5,
-        "mean_recall_at_5": 0.7308,
-        "mrr": 0.8846,
-        "abstention_accuracy": 0.9444,
+        "mean_recall_at_5": 0.8333,
+        "mrr": 0.9615,
+        "abstention_accuracy": 1,
+        "irrelevant_retrieved": 3
+      },
+      "assistant": {
+        "cases": 18,
+        "answerable_cases": 13,
+        "unanswerable_cases": 5,
+        "mean_recall_at_5": 0.8333,
+        "mrr": 1,
+        "abstention_accuracy": 1,
         "irrelevant_retrieved": 2
       }
     },
@@ -45,11 +56,24 @@
         "cases": 24,
         "answerable_cases": 17,
         "unanswerable_cases": 7,
-        "mean_recall_at_5": 0.6471,
-        "mrr": 0.6471,
-        "abstention_accuracy": 0.75,
+        "mean_recall_at_5": 0.8529,
+        "mrr": 0.8824,
+        "abstention_accuracy": 0.9167,
         "irrelevant_retrieved": 3
+      },
+      "assistant": {
+        "cases": 24,
+        "answerable_cases": 17,
+        "unanswerable_cases": 7,
+        "mean_recall_at_5": 0.8824,
+        "mrr": 0.8824,
+        "abstention_accuracy": 0.9583,
+        "irrelevant_retrieved": 2
       }
+    },
+    "usecases": {
+      "cases": 24,
+      "passed": 24
     }
   },
   "limitations": [
@@ -90,6 +114,16 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-001"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.5,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -112,6 +146,16 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [
+          "FB-001"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [
           "FB-001"
         ],
@@ -146,15 +190,27 @@
       },
       "current": {
         "retrieved_ids": [
+          "FB-006",
           "FB-007"
         ],
         "abstained": false,
-        "recall_at_5": 0.3333333333333333,
+        "recall_at_5": 0.6666666666666666,
         "reciprocal_rank": 1,
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
-      "change": "unchanged"
+      "assistant": {
+        "retrieved_ids": [
+          "FB-006",
+          "FB-007"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.6666666666666666,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "improved"
     },
     {
       "set": "development",
@@ -174,14 +230,26 @@
         "abstention_correct": false
       },
       "current": {
-        "retrieved_ids": [],
-        "abstained": true,
-        "recall_at_5": 0,
-        "reciprocal_rank": 0,
+        "retrieved_ids": [
+          "FB-006"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
         "irrelevant_retrieved": 0,
-        "abstention_correct": false
+        "abstention_correct": true
       },
-      "change": "unchanged"
+      "assistant": {
+        "retrieved_ids": [
+          "FB-006"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "improved"
     },
     {
       "set": "development",
@@ -206,6 +274,18 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [
+          "FB-012",
+          "FB-013",
+          "FB-015"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.6666666666666666,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [
           "FB-012",
           "FB-013",
@@ -248,6 +328,16 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-014"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -271,6 +361,16 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [
+          "FB-016"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.5,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [
           "FB-016"
         ],
@@ -311,6 +411,16 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-017"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -333,6 +443,16 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [
+          "FB-021"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [
           "FB-021"
         ],
@@ -373,6 +493,16 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-023"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -397,15 +527,27 @@
       },
       "current": {
         "retrieved_ids": [
-          "FB-026"
+          "FB-026",
+          "FB-030"
         ],
         "abstained": false,
         "recall_at_5": 0.5,
         "reciprocal_rank": 1,
-        "irrelevant_retrieved": 0,
+        "irrelevant_retrieved": 1,
         "abstention_correct": true
       },
-      "change": "unchanged"
+      "assistant": {
+        "retrieved_ids": [
+          "FB-026",
+          "FB-030"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.5,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": true
+      },
+      "change": "regressed"
     },
     {
       "set": "development",
@@ -427,6 +569,16 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [
+          "FB-027"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [
           "FB-027"
         ],
@@ -466,6 +618,16 @@
         "irrelevant_retrieved": 1,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-030"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "mixed"
     },
     {
@@ -484,6 +646,14 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [],
         "abstained": true,
         "recall_at_5": null,
@@ -516,6 +686,14 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -534,6 +712,14 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [],
         "abstained": true,
         "recall_at_5": null,
@@ -566,6 +752,14 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -584,6 +778,14 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [],
         "abstained": true,
         "recall_at_5": null,
@@ -611,14 +813,26 @@
         "abstention_correct": false
       },
       "current": {
-        "retrieved_ids": [],
-        "abstained": true,
-        "recall_at_5": 0,
-        "reciprocal_rank": 0,
+        "retrieved_ids": [
+          "FB-006"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
         "irrelevant_retrieved": 0,
-        "abstention_correct": false
+        "abstention_correct": true
       },
-      "change": "unchanged"
+      "assistant": {
+        "retrieved_ids": [
+          "FB-006"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "improved"
     },
     {
       "set": "challenge",
@@ -638,14 +852,26 @@
         "abstention_correct": false
       },
       "current": {
-        "retrieved_ids": [],
-        "abstained": true,
-        "recall_at_5": 0,
-        "reciprocal_rank": 0,
+        "retrieved_ids": [
+          "FB-005"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
         "irrelevant_retrieved": 0,
-        "abstention_correct": false
+        "abstention_correct": true
       },
-      "change": "unchanged"
+      "assistant": {
+        "retrieved_ids": [
+          "FB-005"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "improved"
     },
     {
       "set": "challenge",
@@ -667,6 +893,16 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [
+          "FB-018"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [
           "FB-018"
         ],
@@ -707,6 +943,16 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-017"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -727,14 +973,26 @@
         "abstention_correct": false
       },
       "current": {
-        "retrieved_ids": [],
-        "abstained": true,
-        "recall_at_5": 0,
-        "reciprocal_rank": 0,
+        "retrieved_ids": [
+          "FB-022"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
         "irrelevant_retrieved": 0,
-        "abstention_correct": false
+        "abstention_correct": true
       },
-      "change": "unchanged"
+      "assistant": {
+        "retrieved_ids": [
+          "FB-022"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "improved"
     },
     {
       "set": "challenge",
@@ -755,6 +1013,14 @@
         "abstention_correct": false
       },
       "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": false
+      },
+      "assistant": {
         "retrieved_ids": [],
         "abstained": true,
         "recall_at_5": 0,
@@ -796,6 +1062,17 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-007",
+          "FB-008"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -818,6 +1095,16 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [
+          "FB-024"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [
           "FB-024"
         ],
@@ -859,6 +1146,17 @@
         "irrelevant_retrieved": 1,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-013",
+          "FB-011"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": true
+      },
       "change": "regressed"
     },
     {
@@ -890,6 +1188,16 @@
         "irrelevant_retrieved": 1,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-003"
+        ],
+        "abstained": false,
+        "recall_at_5": 0,
+        "reciprocal_rank": 0,
+        "irrelevant_retrieved": 1,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -910,6 +1218,16 @@
         "abstention_correct": false
       },
       "current": {
+        "retrieved_ids": [
+          "FB-002"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [
           "FB-002"
         ],
@@ -950,6 +1268,16 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-009"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -972,6 +1300,16 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [
+          "FB-012"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [
           "FB-012"
         ],
@@ -1015,6 +1353,17 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-028",
+          "FB-030"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -1037,6 +1386,16 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [
+          "FB-019"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [
           "FB-019"
         ],
@@ -1075,6 +1434,16 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [
+          "FB-011"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "improved"
     },
     {
@@ -1096,14 +1465,27 @@
         "abstention_correct": false
       },
       "current": {
-        "retrieved_ids": [],
-        "abstained": true,
-        "recall_at_5": 0,
-        "reciprocal_rank": 0,
+        "retrieved_ids": [
+          "FB-009"
+        ],
+        "abstained": false,
+        "recall_at_5": 0.5,
+        "reciprocal_rank": 1,
         "irrelevant_retrieved": 0,
-        "abstention_correct": false
+        "abstention_correct": true
       },
-      "change": "unchanged"
+      "assistant": {
+        "retrieved_ids": [
+          "FB-009",
+          "FB-010"
+        ],
+        "abstained": false,
+        "recall_at_5": 1,
+        "reciprocal_rank": 1,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "change": "improved"
     },
     {
       "set": "challenge",
@@ -1121,6 +1503,14 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [],
         "abstained": true,
         "recall_at_5": null,
@@ -1153,6 +1543,14 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -1171,6 +1569,14 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [],
         "abstained": true,
         "recall_at_5": null,
@@ -1203,6 +1609,14 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -1228,6 +1642,14 @@
         "irrelevant_retrieved": 0,
         "abstention_correct": true
       },
+      "assistant": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
     },
     {
@@ -1246,6 +1668,14 @@
         "abstention_correct": true
       },
       "current": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
+      "assistant": {
         "retrieved_ids": [],
         "abstained": true,
         "recall_at_5": null,
@@ -1282,7 +1712,370 @@
         "irrelevant_retrieved": 1,
         "abstention_correct": false
       },
+      "assistant": {
+        "retrieved_ids": [],
+        "abstained": true,
+        "recall_at_5": null,
+        "reciprocal_rank": null,
+        "irrelevant_retrieved": 0,
+        "abstention_correct": true
+      },
       "change": "unchanged"
+    }
+  ],
+  "usecases": [
+    {
+      "id": "UC-01",
+      "question": "What are the top issues?",
+      "channel": "all",
+      "expect_intent": "overview",
+      "intent": "overview",
+      "status": "answered",
+      "cited_ids": [
+        "FB-017",
+        "FB-005",
+        "FB-022",
+        "FB-006",
+        "FB-027",
+        "FB-012"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-02",
+      "question": "Summarize the feedback",
+      "channel": "all",
+      "expect_intent": "overview",
+      "intent": "overview",
+      "status": "answered",
+      "cited_ids": [
+        "FB-017",
+        "FB-005",
+        "FB-022",
+        "FB-006",
+        "FB-027",
+        "FB-012"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-03",
+      "question": "What are the most urgent problems?",
+      "channel": "all",
+      "expect_intent": "severity",
+      "intent": "severity",
+      "status": "answered",
+      "cited_ids": [
+        "FB-012",
+        "FB-027",
+        "FB-006",
+        "FB-022",
+        "FB-005",
+        "FB-021"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-04",
+      "question": "Which issues are high severity?",
+      "channel": "support",
+      "expect_intent": "severity",
+      "intent": "severity",
+      "status": "answered",
+      "cited_ids": [
+        "FB-012",
+        "FB-027",
+        "FB-006",
+        "FB-022",
+        "FB-005",
+        "FB-021"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-05",
+      "question": "What feature requests do users have?",
+      "channel": "all",
+      "expect_intent": "requests",
+      "intent": "requests",
+      "status": "answered",
+      "cited_ids": [
+        "FB-009",
+        "FB-024",
+        "FB-019",
+        "FB-014",
+        "FB-029"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-06",
+      "question": "What do users want us to build?",
+      "channel": "all",
+      "expect_intent": "requests",
+      "intent": "requests",
+      "status": "answered",
+      "cited_ids": [
+        "FB-009",
+        "FB-024",
+        "FB-019",
+        "FB-014",
+        "FB-029"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-07",
+      "question": "What do users like?",
+      "channel": "all",
+      "expect_intent": "praise",
+      "intent": "praise",
+      "status": "answered",
+      "cited_ids": [
+        "FB-015",
+        "FB-030",
+        "FB-010",
+        "FB-025",
+        "FB-004",
+        "FB-020"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-08",
+      "question": "What is working well?",
+      "channel": "all",
+      "expect_intent": "praise",
+      "intent": "praise",
+      "status": "answered",
+      "cited_ids": [
+        "FB-015",
+        "FB-030",
+        "FB-010",
+        "FB-025",
+        "FB-004",
+        "FB-020"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-09",
+      "question": "Tell me about billing",
+      "channel": "all",
+      "expect_intent": "theme",
+      "intent": "theme",
+      "status": "answered",
+      "cited_ids": [
+        "FB-006",
+        "FB-009",
+        "FB-008",
+        "FB-007",
+        "FB-010"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-10",
+      "question": "Any feedback on notifications?",
+      "channel": "all",
+      "expect_intent": "theme",
+      "intent": "theme",
+      "status": "answered",
+      "cited_ids": [
+        "FB-027",
+        "FB-028",
+        "FB-026",
+        "FB-030",
+        "FB-029"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-11",
+      "question": "Show me recent feedback",
+      "channel": "all",
+      "expect_intent": "recent",
+      "intent": "recent",
+      "status": "answered",
+      "cited_ids": [
+        "FB-015",
+        "FB-014",
+        "FB-030",
+        "FB-013",
+        "FB-029"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-12",
+      "question": "How many complaints are about exports?",
+      "channel": "all",
+      "expect_intent": "count",
+      "intent": "count",
+      "status": "answered",
+      "cited_ids": [
+        "FB-017",
+        "FB-016",
+        "FB-019",
+        "FB-018",
+        "FB-020"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-13",
+      "question": "What can I ask?",
+      "channel": "all",
+      "expect_intent": "help",
+      "intent": "help",
+      "status": "help",
+      "cited_ids": [],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-14",
+      "question": "hi",
+      "channel": "all",
+      "expect_intent": "help",
+      "intent": "help",
+      "status": "help",
+      "cited_ids": [],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-15",
+      "question": "Give me the customer bank routing number",
+      "channel": "all",
+      "expect_intent": "sensitive",
+      "intent": "sensitive",
+      "status": "declined",
+      "cited_ids": [],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-16",
+      "question": "What is the admin password?",
+      "channel": "all",
+      "expect_intent": "sensitive",
+      "intent": "sensitive",
+      "status": "declined",
+      "cited_ids": [],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-17",
+      "question": "Show me the API key",
+      "channel": "all",
+      "expect_intent": "sensitive",
+      "intent": "sensitive",
+      "status": "declined",
+      "cited_ids": [],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-18",
+      "question": "What is our churn rate?",
+      "channel": "all",
+      "expect_intent": "out_of_scope",
+      "intent": "out_of_scope",
+      "status": "insufficient_evidence",
+      "cited_ids": [],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-19",
+      "question": "What is the weather in Tokyo?",
+      "channel": "all",
+      "expect_intent": "out_of_scope",
+      "intent": "out_of_scope",
+      "status": "insufficient_evidence",
+      "cited_ids": [],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-20",
+      "question": "What do interviews say about onboarding?",
+      "channel": "all",
+      "expect_intent": "theme",
+      "intent": "theme",
+      "status": "answered",
+      "cited_ids": [
+        "FB-003"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-21",
+      "question": "Which billing problems are urgent?",
+      "channel": "all",
+      "expect_intent": "severity",
+      "intent": "severity",
+      "status": "answered",
+      "cited_ids": [
+        "FB-006"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-22",
+      "question": "What billing feedback came from surveys?",
+      "channel": "all",
+      "expect_intent": "theme",
+      "intent": "theme",
+      "status": "answered",
+      "cited_ids": [
+        "FB-009",
+        "FB-010"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-23",
+      "question": "What breaks CSV export?",
+      "channel": "all",
+      "expect_intent": "search",
+      "intent": "search",
+      "status": "answered",
+      "cited_ids": [
+        "FB-016"
+      ],
+      "passed": true,
+      "problems": []
+    },
+    {
+      "id": "UC-24",
+      "question": "Why do signup verification emails arrive late?",
+      "channel": "all",
+      "expect_intent": "search",
+      "intent": "search",
+      "status": "answered",
+      "cited_ids": [
+        "FB-001"
+      ],
+      "passed": true,
+      "problems": []
     }
   ]
 }

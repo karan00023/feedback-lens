@@ -4,7 +4,7 @@
 
 A personal portfolio prototype for investigating product feedback with source-linked answers. Built for a product manager who needs to move from a support inbox to an evidence-backed question about user friction.
 
-The browser demo works without an API key. It uses an **extractive retrieval baseline**, not an LLM. The optional local server adds an OpenAI Responses API workflow with structured answers and citation validation. Live model behavior has not yet been tested with a real API key.
+The browser demo works without an API key. It uses **keyword retrieval and rule-based listings that quote records verbatim**, not an LLM. The optional local server adds an OpenAI Responses API workflow with structured answers and citation validation. Live model behavior has not yet been tested with a real API key.
 
 ## Start here: four practical walkthroughs
 
@@ -37,8 +37,8 @@ Run `npm run telemetry` to reproduce the request dataset and baseline report. `n
 Requires Node.js 22 or later. There are no package dependencies to install.
 
 ```sh
-npm test            # 44 unit and local HTTP tests
-npm run evaluate    # scores the current retriever against the frozen v1 baseline
+npm test            # 56 unit and local HTTP tests
+npm run evaluate    # scores v1, today's retriever and the full workspace; checks 24 use cases
 npm start           # http://127.0.0.1:8767 — serves the whole docs/ site locally
 ```
 
@@ -50,16 +50,17 @@ The same `docs/` directory is published by GitHub Pages; only the static, keyles
 
 1. **Scope.** Choose a channel. The channel limits both the answer and the evidence library.
 2. **Ask.** Ask “What breaks CSV export?” or pick an example. Enter submits; Shift+Enter adds a line.
-3. **Inspect.** The answer quotes matching records word for word, highlights the words that matched and labels itself *Extractive baseline · no LLM*.
+3. **Inspect.** The answer quotes matching records word for word, highlights the words that matched and labels itself *Extractive · no LLM*.
 4. **Follow a source.** “Show FB-016 in library” scrolls to and focuses the record, clearing any library filter that would hide it. “Back to answer” returns.
 5. **Understand the result.** “Why this result?” lists the searched terms, terms missing from the scope, the rule applied and records that shared a term but were not cited.
-6. **Abstention.** Try “Too narrow a scope”: the survey channel has no evidence, and the workspace offers to search all channels. “Out of scope” (revenue) abstains and explains why.
+6. **Explore.** “Top issues”, “Most urgent”, “Feature requests”, “What users like” and “Compare channels” answer from record metadata and keyword rules, quoting the records they used. Questions such as “Tell me about billing”, “How many complaints are about exports?” or “Show me recent feedback” work too.
+7. **Limits.** “Too narrow a scope” offers to search all channels. “Out of scope” (revenue) explains what the library covers and suggests questions that will work. “Sensitive request” is declined. A specific question nothing answers (“total invoice owed by Acme”) says so, then shows related feedback labelled as context.
 
 **What affects answers:** only the question and the channel. **What does not:** theme chips, library search and “Cited only” narrow the evidence library. The UI says so beside each control. Themes are keyword rules, not learned clusters. A question and channel are kept in the URL so an investigation can be shared.
 
 ## Optional live model mode
 
-Set `OPENAI_API_KEY` and `OPENAI_MODEL` in your shell, then start the local server. Choose a model available to your API project that supports Responses structured output. This project does not automatically load `.env` files. Do not commit a key or put it in browser code. The server binds to loopback and is intended for local development, not public hosting. A mode selector appears only when the local server reports a configured key.
+Set `OPENAI_API_KEY` and `OPENAI_MODEL` in your shell, then start the local server. Choose a model available to your API project that supports Responses structured output. This project does not automatically load `.env` files. Do not commit a key or put it in browser code. The server binds to loopback and is intended for local development, not public hosting. A mode selector appears only when the local server reports a configured key. The same question router chooses the records; help, declined and non-answers never call the provider.
 
 The model receives the question and retrieved synthetic records as untrusted data. It returns claims with exact quotes and source IDs. The server rejects missing IDs, fabricated quotes, incomplete responses and refusals. **A valid quote does not prove that a generated claim is semantically supported.** Human review and semantic evaluation remain necessary. Token usage is returned when available; costs and model latency have not been measured.
 
@@ -69,7 +70,8 @@ The model receives the question and retrieved synthetic records as untrusted dat
 
 - Filterable evidence library with 31 synthetic records across three channels.
 - Six keyword-based product themes, plus an Other bucket.
-- Shared browser/server lexical retrieval (v2) with an explanation for every answer and abstention.
+- A deterministic question router (`docs/assistant.mjs`) for specific problems, overviews, urgency, feature requests, praise, themes, recency, counts, channel comparison, help and sensitive requests. No question ends in a bare error: non-answers explain why and suggest questions that work. See [the router note](evaluations/ASSISTANT.md).
+- Shared browser/server lexical retrieval (v3) with a small hand-written synonym glossary and an explanation for every search answer and abstention.
 - Extractive answers that quote records verbatim, with source navigation and match highlighting.
 - Useful states: loading, failed load with retry, empty question, no library matches, weaker match, scope-limited abstention with a broaden option, and provider errors with retry.
 - Optional server-side LLM adapter, JSON schema and exact-quote validation (unvalidated with a real provider).
@@ -81,7 +83,7 @@ The model receives the question and retrieved synthetic records as untrusted dat
 
 The data describes a fictional product, Orbit workspace. It is entirely synthetic. No employer or customer data is included. Severity labels are authored sample metadata, not model predictions. One record contains an intentionally malicious instruction for testing untrusted content.
 
-Both query sets (18 development, 24 challenge) were written by the project author with AI assistance, and some retriever choices were made after seeing challenge failures. They are diagnostics, **not a held-out benchmark**. See [the full report](docs/data/evaluation.json) and [the change note](evaluations/RETRIEVAL-V2.md), which lists the regression and the 13 remaining failures. Lexical retrieval does not handle synonyms (“billed” vs “charged”) or polarity; it can return off-target records and can abstain when the corpus contains an answer.
+All three question sets (18 development, 24 challenge, 24 use cases) were written by the project author with AI assistance. The synonym glossary and some rules were adjusted after seeing failures. They are diagnostics, **not a held-out benchmark**. See [the full report](docs/data/evaluation.json) and the change notes for [v2](evaluations/RETRIEVAL-V2.md) and [the router and v3](evaluations/ASSISTANT.md), which list regressions and remaining failures. Lexical retrieval handles only the synonyms in its glossary and does not understand polarity; it can return off-target records and can abstain when the corpus contains an answer.
 
 No customer adoption, business savings, production reliability, autonomous multi-agent capability or live LLM accuracy is claimed. The interface is a working prototype, not a commercial deployment.
 
