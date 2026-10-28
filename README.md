@@ -6,12 +6,13 @@ A personal portfolio prototype for investigating product feedback with source-li
 
 The browser demo works without an API key. It uses **keyword retrieval and rule-based listings that quote records verbatim**, not an LLM. The optional local server adds an OpenAI Responses API workflow with structured answers and citation validation. Live model behavior has not yet been tested with a real API key.
 
-## Start here: four practical walkthroughs
+## Start here: five practical walkthroughs
 
 This is Karan Kapoor's personal AI product portfolio, developed with AI coding assistance. Each walkthrough connects a product decision to a working artifact and inspectable evidence.
 
 | Question to explore | Try it | Inspect the evidence |
 | --- | --- | --- |
+| Would you trust an AI usage bill after retries, conflicting records or a tariff change? | [Metering & Launch Console](https://karan00023.github.io/feedback-lens/metering/) — replay events, inspect exact charges and review decision blockers. | [Accounting decisions and three-minute walkthrough](docs/metering/README.md). Synthetic usage, fictional prices and a simulated gate; no production billing or enforcement. |
 | Can a feedback assistant show its evidence and say when it does not know? | [Feedback Lens workspace](https://karan00023.github.io/feedback-lens/) — ask “What breaks CSV export?”, follow the citation, then try the out-of-scope and narrow-scope examples. | [Retrieval change note](evaluations/RETRIEVAL-V2.md): frozen baseline vs current, gains, one regression and remaining failures. Extractive only; no LLM runs on the hosted page. |
 | Why can aggregate latency worsen when both workload cohorts improve? | [Telemetry Lab](https://karan00023.github.io/feedback-lens/telemetry/) — switch between all, quick and deep workloads. | [Methods and synthetic results](https://karan00023.github.io/feedback-lens/telemetry/report.html). The 480 requests are generated fixtures; costs are hypothetical. |
 | Does a valid citation mean an answer is supported? | [Citation counterexample](https://karan00023.github.io/feedback-lens/research/citation-checks.html) — inspect two scripted claims that share a genuine quote. | [Offline evaluation harness](experiments/comparison/README.md). Structural validation and semantic review are separate; no live model ranking is claimed. |
@@ -37,7 +38,7 @@ Run `npm run telemetry` to reproduce the request dataset and baseline report. `n
 Requires Node.js 22 or later. There are no package dependencies to install.
 
 ```sh
-npm test            # 56 unit and local HTTP tests
+npm test            # 72 unit and local HTTP tests
 npm run evaluate    # scores v1, today's retriever and the full workspace; checks 24 use cases
 npm start           # http://127.0.0.1:8767 — serves the whole docs/ site locally
 ```
