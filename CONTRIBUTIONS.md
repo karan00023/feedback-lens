@@ -47,3 +47,8 @@ At Karan's request, the coding agent audited the project and implemented the wor
 ## October 28 — question router and retrieval v3
 
 Karan asked for more use cases and for questions not to end in bare "doesn't exist" responses. The coding agent wrote the use-case set, router, glossary, tests, UI changes and notes. Karan has not yet reviewed them.
+
+
+## October 28 — metering and launch console
+
+Karan asked for working GitHub products supporting interview discussions of platform, compute, spend-management, billing and launch responsibilities. The coding agent authored the metering engine, UI, synthetic event fixtures, 16 accounting/control tests and walkthrough. Karan has not yet independently reviewed this implementation. It contains no employer data, live provider calls, production billing outcomes or real organizational approvals. The demonstrated choices include conservative conflict quarantine, distinct event/request identities, exact nanodollar totals, explicit zero-rating policy and an unauthenticated simulation gate.
