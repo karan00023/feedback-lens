@@ -64,3 +64,10 @@ Karan asked that people asking questions should not hit bare "this doesn't exist
 Workspace results: development recall@5 83% with 100% correct answer/abstain decisions; challenge recall@5 88% with 96%. A synonym introduced one development regression (Q-11). Eight development or challenge queries still fall short. All three sets are author-written and partly tuned against, so these are optimistic diagnostics.
 
 Tests: 56 `node --test` tests pass. `npm run test:browser` passed 28/28 Chromium checks at desktop and mobile widths against the local server. Not verified: the deployed site from this environment, live LLM mode, and non-English questions (these get the out-of-library response).
+
+
+## October 28, 2026 — metering and launch replay
+
+Added an isolated browser-only metering console in docs/metering, with exact integer accounting, batch idempotency, conflict quarantine, cost attribution, hypothetical tariff replay, simulated review gates and JSON evidence export. Six synthetic events yield four billable requests and $9.76 at fictional baseline rates; duplicate redelivery leaves the total unchanged; conflicting e2 records are both quarantined, leaving $5.36 of incomplete accepted usage and HOLD. A 125% pricing assumption yields $12.20. These are authored fixtures, not provider bills or savings.
+
+The exact new engine passed all 16 tests in a Node in-memory execution before remote publication (local filesystem is read-only). Whole-repository CI and hosted browser verification must be checked before describing this release as deployed. No existing feedback core files changed. No production billing, capacity operations, live provider results, durable idempotency or actual finance approvals are claimed. Owner review pending. See docs/metering/README.md for the runnable walkthrough and boundaries.
