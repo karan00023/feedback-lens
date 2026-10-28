@@ -1,0 +1,32 @@
+import {RATE_CARD,SAMPLE,reconcile,money} from "./meter.mjs";
+const $=id=>document.getElementById(id);
+let events=structuredClone(SAMPLE), report=null;
+const notes={clean:"Six synthetic events, including one failure and one abort.",retry:"An exact delivery retry adds a row, not a second charge.",conflict:"One event ID has conflicting token counts. Both occurrences must be investigated.",unknown:"A completed event names a model without a known price. Never assume its cost is zero."};
+function scenario(){const k=$("scenario").value;events=structuredClone(SAMPLE);if(k==="retry")events.push({...SAMPLE[0]});if(k==="conflict")events.push({...SAMPLE[1],outputTokens:1});if(k==="unknown")events.push({...SAMPLE[0],eventId:"e7",requestId:"r7",model:"new-model"});$("scenario-note").textContent=notes[k];$("events").value=JSON.stringify(events,null,2);$("signoffs").checked=false;$("import-status").textContent="";render();}
+function li(parent,text){const el=document.createElement("li");el.textContent=text;parent.append(el);}
+function budgetCents(){const s=$("budget").value;if(!/^\d+(\.\d{1,2})?$/.test(s))throw new Error("Enter a non-negative budget with at most two decimal places.");const [whole,frac=""]=s.split(".");return Number(whole)*100+Number(frac.padEnd(2,"0"));}
+function render(){try{
+  const multiplier=Number($("pricing").value);$("pricing-label").textContent=multiplier+"%";
+  report=reconcile(events,{budgetCents:budgetCents(),multiplier,signoffs:$("signoffs").checked});
+  $("error").textContent="";$("export").disabled=false;
+  $("total").textContent=money(report.totalNanos);$("delta").textContent="Baseline "+money(report.baselineNanos)+" · "+multiplier+"% pricing";
+  $("accepted").textContent=String(report.lines.length);$("excluded").textContent=report.excluded.length+" failed / aborted events excluded";
+  $("duplicates").textContent=String(report.duplicates);$("quarantined").textContent=String(report.rejected.length);
+  $("gate-title").textContent=report.technicalGate;$("gate-title").className=report.blockers.length?"hold":"pass";
+  $("blockers").replaceChildren();if(!report.blockers.length)li($("blockers"),"Usage and pricing replay checks passed. Production readiness remains unverified.");else report.blockers.forEach(x=>li($("blockers"),x));
+  $("teams").replaceChildren();for(const x of report.teams){const row=document.createElement("div");row.className="team";const name=document.createElement("span");name.textContent=x.team;const amount=document.createElement("strong");amount.textContent=money(x.costNanos);row.append(name,amount);const bar=document.createElement("div");bar.className="bar";const fill=document.createElement("span");fill.style.width=(BigInt(report.totalNanos)?Number(BigInt(x.costNanos)*10000n/BigInt(report.totalNanos))/100:0)+"%";bar.append(fill);$("teams").append(row,bar);}
+  if(!report.teams.length)$("teams").textContent="No accepted billable usage.";
+  $("audit").replaceChildren();li($("audit"),report.inputRows+" input rows; "+report.lines.length+" billable requests; "+report.duplicates+" duplicate deliveries suppressed.");
+  report.excluded.forEach(x=>li($("audit"),x.eventId+": "+x.reason));report.rejected.slice(0,12).forEach(x=>li($("audit"),"Row "+x.row+" ("+x.eventId+"): "+x.reason));if(report.rejected.length>12)li($("audit"),"More rejected rows are in the exported report.");
+  $("ledger").replaceChildren();for(const x of report.lines){const tr=document.createElement("tr");for(const text of [x.eventId+" / "+x.requestId,x.team,x.model,x.inputTokens.toLocaleString()+" / "+x.outputTokens.toLocaleString(),money(x.costNanos)]){const td=document.createElement("td");td.textContent=text;tr.append(td);}$("ledger").append(tr);}
+  if(!report.lines.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=5;td.textContent="No billable entries. Inspect the event issues above.";tr.append(td);$("ledger").append(tr);}
+  $("announcement").textContent=report.technicalGate+". "+money(report.totalNanos)+" replay charge. "+report.rejected.length+" quarantined rows.";
+}catch(e){report=null;$("error").textContent=e.message;$("export").disabled=true;$("gate-title").textContent="INVALID CONFIGURATION";$("gate-title").className="hold";for(const id of ["total","accepted","duplicates","quarantined"])$(id).textContent="—";$("delta").textContent="Correct the error to recalculate.";$("excluded").textContent="";for(const id of ["teams","audit","blockers","ledger"])$(id).replaceChildren();$("announcement").textContent="Invalid configuration; export disabled.";}}
+$("scenario").addEventListener("change",scenario);
+for(const id of ["budget","pricing"])$(id).addEventListener("input",()=>{$("signoffs").checked=false;render();});
+$("signoffs").addEventListener("change",render);
+$("sample").addEventListener("click",()=>{$("events").value=JSON.stringify(SAMPLE,null,2);$("import-status").textContent="Sample restored in editor. Select Reconcile to apply."});
+$("import").addEventListener("click",()=>{try{const raw=$("events").value;if(raw.length>500000)throw new Error("Limit is 500 KB of JSON.");const parsed=JSON.parse(raw);reconcile(parsed);events=parsed;$("signoffs").checked=false;$("scenario-note").textContent="Custom local replay. Inspect quarantined rows before interpreting totals.";$("import-status").textContent="Custom batch loaded; reviews reset.";render();}catch(e){$("import-status").textContent="Import rejected: "+e.message+" Previous replay retained.";}});
+$("reset").addEventListener("click",()=>{$("scenario").value="clean";$("budget").value="10.00";$("pricing").value="100";scenario();});
+$("export").addEventListener("click",()=>{if(!report)return;const payload={...report,generatedAt:new Date().toISOString(),rateCard:RATE_CARD,limitations:["Synthetic or user-supplied replay; not provider results","No production enforcement or authenticated approvals","Batch-only idempotency; no taxes, FX, tiers or credits"]};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download="metering-replay-evidence.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+scenario();
