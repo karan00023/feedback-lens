@@ -206,3 +206,35 @@ input[type=search] { flex: 1 1 200px; background: #fff; border: 1px solid #b9c4b
   .site-footer span { display: block; line-height: 1.8; }
 }
 .usecase-line { font-size: 14px; line-height: 1.6; background: #f5f8f2; border-radius: 8px; padding: 10px 12px; }
+
+/* ---------- AI answers ---------- */
+.mode-pill.on { border-style: solid; border-color: #b7a6d8; color: #5b3b8a; background: #f6f2fc; }
+.answer-loading { display: flex; align-items: center; gap: 10px; padding: 18px 0; color: var(--muted); font-size: 14px; }
+.spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--green); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+.kinds { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 2px; }
+.kind { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid transparent; }
+.kind-feedback { color: var(--green); background: var(--green-soft); }
+.kind-general { color: #234b72; background: #eaf1f8; }
+.kind-unverified { color: var(--warn); background: var(--warn-soft); }
+.headline { font-size: 18px; line-height: 1.45; }
+.answer-part { margin: 14px 0; }
+.answer-part h5 { font-size: 14px; margin: 0 0 4px; }
+.answer-part.general { background: #f3f7fb; border-left: 3px solid #4b79a8; border-radius: 0 8px 8px 0; padding: 10px 14px; }
+.answer-part.general p { margin: 6px 0; font-size: 15px; line-height: 1.6; }
+.claim p { margin: 0 0 6px; font-size: 15px; line-height: 1.55; }
+.missing { font-size: 14px; color: var(--muted); }
+.resolved { margin-top: -4px; }
+.footnote { border-top: 1px dashed var(--line); padding-top: 8px; margin-top: 12px; }
+.related-block { margin: 10px 0; font-size: 14px; }
+.related-block summary { cursor: pointer; color: var(--green); }
+.degraded { background: var(--warn-soft); color: var(--warn); border-radius: 8px; padding: 10px 14px; margin: 10px 0; font-size: 14px; line-height: 1.5; }
+.suggestions [data-followup] { border: 1px solid var(--line); background: #fff; border-radius: 16px; padding: 6px 11px; margin: 0 6px 6px 0; font-size: 13px; color: inherit; }
+.suggestions [data-followup]:hover { border-color: var(--green); color: var(--green); }
+.thread { margin-top: 14px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; background: #fff; }
+.thread-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.thread ol { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
+.thread li { margin: 4px 0; }
+.thread-q { display: block; font-weight: 600; }
+.thread-a { display: block; color: var(--muted); }

@@ -1,6 +1,6 @@
 // Real loopback HTTP calls against synthetic feedback; no model/provider calls.
 import {createServer} from '../../server.mjs';
-const server=createServer();
+const server=createServer({provider:null,env:{}});
 const started=new Date().toISOString();
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const base=`http://127.0.0.1:${server.address().port}`;

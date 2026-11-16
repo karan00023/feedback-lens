@@ -77,3 +77,38 @@ Metering publication verification: PR #3 merged as f1fef9dd2caa3fb5f28bc80f5cc51
 
 
 Final hosted export check: the generated, copyable JSON packet was verified to contain 9,760,000,000 nanodollars, four billable lines, the fictional-v1 rate card and three explicit limitations. Mobile conflict controls also passed, bringing direct hosted assertions to 14. A script version was added to avoid mixing a cached app module with updated HTML. The final small follow-up invalidates an evidence packet whenever the replay configuration changes; verify that reset/price changes clear the previous snapshot. Download completion remains unverified; the copyable JSON path is working.
+
+## November 16, 2026 — hybrid AI question answering
+
+**Problem.** Asking “What is the limit of an Excel report?” returned “Outside this library · Extractive · no LLM”. Root causes:
+- The hosted page and the local default ran only the deterministic keyword router, which ends any question without matching records in an out-of-scope abstention.
+- The optional OpenAI adapter only re-worded answers the router had already found, so it could never answer general questions either.
+- That adapter had never been configured or exercised with a real provider.
+
+**Change.** A server-side hybrid pipeline (`ai/`):
+- Gemini free tier, OpenAI-compatible endpoint.
+- LLM question understanding with conversation context.
+- Semantic + lexical retrieval.
+- Structured generation that separates cited feedback findings, labelled general knowledge and unverified product facts.
+- Code-side validation of citations, quotes, numbers and record IDs.
+- Model failover, retries, timeouts, and a keyword fallback that states its reason.
+- Privacy gate (synthetic records only by default) and redaction.
+- Optional hosted mode with CORS, plus a Render blueprint.
+
+The UI shows the real AI status, source-type labels, clickable citations, a conversation thread, loading/fallback/error states, and an offer to broaden a narrow scope.
+
+**Measured.**
+- `npm test`: 92/92 pass, including scripted-provider tests for rate limits, Retry-After, 503 failover, timeouts, malformed JSON, refusals, bad keys, empty retrieval, restricted channels, follow-ups, missing configuration and prompt-injection placement.
+- Browser: 42/42 Chromium checks at 1280 and 390 px, including AI-mode UI through a scripted provider.
+- Live: `npm run verify:live` passed 10/10 with real `gemini-3.5-flash-lite` and `gemini-embedding-001` calls over the local HTTP API, covering the nine mandatory questions plus a restricted-channel check.
+- The exact Excel question was also asked through the real UI in Chromium. It returned Excel's limits as general knowledge, Orbit's export limit as unverified, and FB-017 cited as context.
+- An earlier live run hit Gemini 503 (overloaded) on 2 of 9 questions; the keyword fallback was shown correctly. The fallback model was added afterwards.
+- One check during exploratory probing: `gemini-3.8-flash` did not answer within 2 minutes.
+- Typical latency was 3–10 s per answer.
+- Evaluation, telemetry and citation-study artifacts are unchanged.
+
+**Not done / limits.**
+- No public deployment of the AI server exists yet. It needs the owner's hosting account and key (see README, *Deploying AI answers*). GitHub Pages remains keyword-only.
+- Google's free-tier rate limits and data-use terms were not re-read in this session, because ai.google.dev was not reachable from it.
+- Live checks test behaviour, not wording; model output varies. Semantic correctness of claims still needs human review.
+

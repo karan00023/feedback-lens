@@ -21,7 +21,7 @@ test('summaries separate aborts, HTTP failures and abstention; quantiles cover r
   assert.throws(()=>m.record({duration_ms:NaN}));assert.throws(()=>createRequestMetrics({capacity:0}));
 });
 test('actual HTTP lifecycle is recorded once with bounded metadata and local-only export',async()=>{
-  const server=createServer();await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  const server=createServer({provider:null,env:{}});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   const base=`http://127.0.0.1:${server.address().port}`;
   try{
     await (await fetch(base+'/api/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:'CSV export date column private-marker'})})).json();
@@ -34,7 +34,7 @@ test('actual HTTP lifecycle is recorded once with bounded metadata and local-onl
   }finally{await new Promise(resolve=>server.close(resolve));}
 });
 test('client disconnect is observable as an abort rather than a completed response',{timeout:5000},async()=>{
-  const server=createServer();await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  const server=createServer({provider:null,env:{}});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   const base=`http://127.0.0.1:${server.address().port}`;
   try{
     const arrived=new Promise(resolve=>server.once('request',(req,res)=>{res.once('close',resolve);}));

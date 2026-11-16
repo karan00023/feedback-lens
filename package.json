@@ -14,6 +14,7 @@
     "comparison:fixtures": "node experiments/comparison/fixtures/generate.mjs",
     "study:citations": "node experiments/comparison/citation-gap.mjs",
     "telemetry:local": "node experiments/telemetry/measure-local.mjs",
-    "test:browser": "node tests/browser/workflow.browser.mjs"
+    "test:browser": "node tests/browser/workflow.browser.mjs",
+    "verify:live": "node evaluations/verify-live.mjs"
   }
 }

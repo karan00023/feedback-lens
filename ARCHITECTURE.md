@@ -2,14 +2,17 @@
 
 ```mermaid
 flowchart LR
-  Corpus[Synthetic feedback JSON] --> Engine[Shared lexical retrieval]
-  Browser[Browser UI] --> Engine
-  Engine --> Extract[Extractive answers with exact source text]
-  Browser -->|local mode only| Server[Loopback Node server]
-  Server --> Engine
-  Server -->|server-side key| API[OpenAI Responses API]
-  API --> Validate[Schema and citation validation]
+  Browser[Browser UI] -->|no server: static page| Router[Keyword router + lexical retrieval]
+  Browser -->|POST /api/answer + conversation| Server[Node server]
+  Server --> Guard[Decline / help rules]
+  Guard --> Understand[LLM: intent, standalone question, queries]
+  Understand --> Retrieve[Hybrid retrieval: embeddings + lexical, channel-scoped]
+  Retrieve --> Generate[LLM: structured answer + code-computed stats]
+  Generate --> Validate[Citation, quote, number and ID validation]
   Validate --> Browser
+  Understand -. provider failure .-> Router
+  Generate -. provider failure .-> Router
+  Server -->|server-side key, redacted synthetic records| Gemini[Gemini API free tier]
 ```
 
 ## Static deployment first
@@ -20,7 +23,7 @@ GitHub Pages hosts only `docs/`. Browser queries run locally against the bundled
 
 `docs/engine.mjs` is imported by the browser, local server, tests and evaluation runner. It removes question-framing stop words, strips common word endings, weights each query term by inverse document frequency within the selected channel, and cites up to five records that contain at least two query terms. Only when no record qualifies does it accept a single rare term carrying at least 40% of the question's weight, and the UI labels that a weaker match. Scores are ranking heuristics, not probabilities or confidence estimates.
 
-Every result carries an explanation (searched terms, terms absent from the scope, the rule applied, and related records that were not cited) so the UI can say why it answered or abstained. Version 3 adds a small hand-written glossary (for example bill ~ charge, team member ~ teammate, slow ~ timeout); synonyms outside it are still missed. The original v1 retriever is frozen in `evaluations/lexical-v1.mjs`; `npm run evaluate` scores both on the development and challenge sets (see `evaluations/RETRIEVAL-V2.md`). Semantic retrieval is a next milestone, not an implemented feature.
+Every result carries an explanation (searched terms, terms absent from the scope, the rule applied, and related records that were not cited) so the UI can say why it answered or abstained. Version 3 adds a small hand-written glossary (for example bill ~ charge, team member ~ teammate, slow ~ timeout); synonyms outside it are still missed. The original v1 retriever is frozen in `evaluations/lexical-v1.mjs`; `npm run evaluate` scores both on the development and challenge sets (see `evaluations/RETRIEVAL-V2.md`). Semantic retrieval is implemented on the server (`ai/retrieval.mjs`) and fuses embedding similarity with this lexical retriever; the static page still uses lexical retrieval only.
 
 ## Question router
 
@@ -40,13 +43,20 @@ The channel is the only filter that changes what the engine searches, so it is p
 
 ## Model boundary
 
-Only the loopback server can call the provider. The model and key are environment configuration. Model input contains only synthetic retrieved records and a bounded question. Feedback text is never interpolated into trusted instructions. Requests use structured outputs, `store: false`, bounded output and a timeout.
+Only the server calls a provider (`ai/provider.mjs`, OpenAI-compatible chat and embeddings; Gemini free tier by default). Keys are server environment variables. Responsibilities are separated:
 
-The validator checks answer shape, nonempty evidence, retrieved source IDs and literal quote membership. These checks prevent invented source references, but do not establish entailment or defend against every prompt injection. The injection unit test verifies message construction only; a live adversarial evaluation is still required.
+- `ai/retrieval.mjs`: what the model may see.
+- `ai/privacy.mjs`: what may leave the server; synthetic records only by default, redacted.
+- `ai/provider.mjs`: transport, timeouts, retries, failover and typed errors.
+- `ai/pipeline.mjs`: understanding, generation and validation.
+
+The model writes prose, but code computes every count it may quote and validates every citation. Feedback text is passed as untrusted user data, never in system instructions. General knowledge is returned in its own labelled field and never mixed into cited feedback points. Because no product documentation exists, Orbit-specific facts are reported as unverified.
+
+Validation ensures that every feedback point cites a record that was given to the model, quotes it word for word, and states only numbers present in those records (digits or number words) or in the computed statistics. It does not establish that a point follows from its quote, and it does not check general-knowledge text. Any provider failure falls back to the deterministic router with the reason shown.
 
 ## Local service constraints
 
-The local server serves only files inside `docs/` with an allowlisted extension (HTML, CSS, JavaScript modules, JSON), rejecting encoded traversal, local Host and Origin validation, request-size and question-length limits, an in-memory request counter and generic provider error responses. It has no persistent user store. This is not a production authorization or abuse-prevention system. Do not expose it directly to the Internet.
+By default the server accepts only loopback Host headers. A hosted deployment opts in with `PUBLIC_HOSTS` (accepted Host values) and `ALLOWED_ORIGINS` (CORS for a separately hosted page). It then applies a per-client request limit, and the telemetry export stays loopback-only. The local server serves only files inside `docs/` with an allowlisted extension (HTML, CSS, JavaScript modules, JSON), rejecting encoded traversal, local Host and Origin validation, request-size and question-length limits, an in-memory request counter and generic provider error responses. It has no persistent user store. This is not a production authorization or abuse-prevention system. Do not expose it directly to the Internet.
 
 ## Evaluation
 
