@@ -343,3 +343,17 @@ test('a narrow scope with no answer offers matching feedback from other channels
   const a = await answerWithAI('What breaks CSV export?', data, {provider, channel: 'survey'});
   assert.ok(a.broaden > 0);
 });
+
+test('a Render deployment accepts its own hostname without extra configuration', async () => {
+  const http = await import('node:http');
+  const server = createServer({provider: null, env: {RENDER_EXTERNAL_HOSTNAME: 'feedback-lens.onrender.com'}});
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const status = host => new Promise((resolve, reject) => http.request({port: server.address().port, path: '/api/status', headers: {Host: host}}, res => { res.resume(); resolve(res.statusCode); }).on('error', reject).end());
+  try {
+    assert.equal(await status('feedback-lens.onrender.com'), 200);
+    assert.equal(await status('other.onrender.com'), 403);
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+  }
+});
+

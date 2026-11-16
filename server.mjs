@@ -53,7 +53,8 @@ function readHistory(value) {
 export function createServer({records = data, telemetryCapacity = 200, provider, index, env = process.env} = {}) {
   if (provider === undefined) ({provider, index} = aiFromEnv(env));
   const metrics = createRequestMetrics({capacity: telemetryCapacity});
-  const publicHosts = new Set(list(env.PUBLIC_HOSTS));
+  // Render provides the service's own hostname, so a Render deploy needs no PUBLIC_HOSTS.
+  const publicHosts = new Set([...list(env.PUBLIC_HOSTS), ...list(env.RENDER_EXTERNAL_HOSTNAME)]);
   const allowedOrigins = new Set(list(env.ALLOWED_ORIGINS));
   const perMinute = Number(env.RATE_LIMIT_PER_MINUTE || 20);
   let windowStart = Date.now();

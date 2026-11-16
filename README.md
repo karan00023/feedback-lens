@@ -105,7 +105,7 @@ How a question is answered (`ai/pipeline.mjs`):
 GitHub Pages serves static files only and cannot keep a key secret. To get AI answers in a deployment:
 
 1. Create a free Gemini API key in Google AI Studio.
-2. Host the server, for example on Render with the included `render.yaml` (free web service; it sleeps when idle, so the first request after a pause is slow). Set `GEMINI_API_KEY` and `PUBLIC_HOSTS` (the service hostname) in the dashboard. That URL serves the full app with AI on.
+2. Host the server on Render: open [Deploy to Render](https://render.com/deploy?repo=https://github.com/karan00023/feedback-lens), sign in, and paste the key when asked for `GEMINI_API_KEY`. The included `render.yaml` configures the rest, and the service accepts its own `onrender.com` hostname automatically. It is a free web service that sleeps when idle, so the first request after a pause is slow. The service URL serves the full app with AI on.
 3. Optional: to make the GitHub Pages copy use it, put the service URL (ending in `/`) in `<meta name="feedback-lens-api">` in `docs/index.html`. `ALLOWED_ORIGINS` must include `https://karan00023.github.io`.
 4. Optional: add `GEMINI_API_KEY` as a repository secret so CI runs `npm run verify:live`.
 
