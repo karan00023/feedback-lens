@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {baseline, explainRetrieval, stem, tokens} from '../docs/engine.mjs';
-import {createServer, liveAnswer, staticFile} from '../server.mjs';
+import {createServer, staticFile} from '../server.mjs';
+import {answerWithAI} from '../ai/pipeline.mjs';
 
 const data = JSON.parse(await readFile(new URL('../docs/data/feedback.json', import.meta.url), 'utf8'));
 const scoped = channel => data.filter(r => r.channel === channel);
@@ -55,8 +56,8 @@ test('an empty scope abstains with an explicit reason', () => {
   assert.match(result.reason, /No feedback records/);
 });
 
-test('live answers carry the same retrieval explanation as the baseline', async () => {
-  const answer = await liveAnswer('Who won the football game?', data, {key: 'test', model: 'test', transport: () => assert.fail('no provider call expected')});
+test('keyword fallbacks carry the same retrieval explanation as the baseline', async () => {
+  const answer = await answerWithAI('Who won the football game?', data, {provider: null});
   assert.equal(answer.status, 'insufficient_evidence');
   assert.equal(answer.retrieval.match, 'none');
 });
@@ -70,7 +71,7 @@ test('static files resolve only inside docs/ with allowlisted extensions', () =>
 });
 
 test('the local server serves every portfolio page so navigation works', async () => {
-  const server = createServer();
+  const server = createServer({provider: null, env: {}});
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const url = `http://127.0.0.1:${server.address().port}`;
   try {

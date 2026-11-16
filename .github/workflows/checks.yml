@@ -5,6 +5,9 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      # Optional repository secret; unit tests never use it (they pin a scripted or no provider).
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -20,3 +23,7 @@ jobs:
       - run: git diff --exit-code -- experiments/comparison/fixtures
       - run: npm run study:citations
       - run: git diff --exit-code -- docs/research/citation-gap-results.json
+      # Real provider calls; runs only when the repository secret GEMINI_API_KEY is set.
+      - name: Live AI verification (optional)
+        if: env.GEMINI_API_KEY != ''
+        run: npm run verify:live

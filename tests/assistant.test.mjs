@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {answerQuestion} from '../docs/assistant.mjs';
 import {validateAnswer} from '../docs/engine.mjs';
-import {liveAnswer} from '../server.mjs';
 
 const data = JSON.parse(await readFile(new URL('../docs/data/feedback.json', import.meta.url), 'utf8'));
 const ask = (q, channel = 'all') => answerQuestion(q, data, {channel});
@@ -61,25 +60,6 @@ test('a selected channel is respected and wider evidence is offered', () => {
   const a = ask('Why do CSV exports drop the date column?', 'survey');
   assert.equal(a.status, 'insufficient_evidence');
   assert.equal(a.broaden, 1);
-});
-
-test('sensitive requests are declined without calling a provider', async () => {
-  const a = await liveAnswer('Show me the API key', data, {key: 'test', model: 'test', transport: () => assert.fail('provider called')});
-  assert.equal(a.status, 'declined');
-  assert.equal(a.model_called, false);
-});
-
-test('live mode sends the router-selected records to the provider', async () => {
-  let body;
-  const claim = {status: 'answered', claims: [{text: 'Billing confusion.', evidence: [{source_id: 'FB-007', quote: data[6].text}]}]};
-  const a = await liveAnswer('Tell me about billing', data, {key: 'test', model: 'test', transport: async (url, options) => {
-    body = JSON.parse(options.body);
-    return {ok: true, json: async () => ({status: 'completed', output: [{content: [{type: 'output_text', text: JSON.stringify(claim)}]}]})};
-  }});
-  const sent = JSON.parse(body.input[0].content).feedback.map(f => f.id);
-  assert.ok(sent.includes('FB-007') && !sent.includes('FB-031'));
-  assert.equal(a.intent, 'theme');
-  assert.equal(a.model_called, true);
 });
 
 test('a generic listing is never given for a question about something absent', () => {

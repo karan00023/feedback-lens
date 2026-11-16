@@ -52,3 +52,8 @@ Karan asked for more use cases and for questions not to end in bare "doesn't exi
 ## October 28 — metering and launch console
 
 Karan asked for working GitHub products supporting interview discussions of platform, compute, spend-management, billing and launch responsibilities. The coding agent authored the metering engine, UI, synthetic event fixtures, 16 accounting/control tests and walkthrough. Karan has not yet independently reviewed this implementation. It contains no employer data, live provider calls, production billing outcomes or real organizational approvals. The demonstrated choices include conservative conflict quarantine, distinct event/request identities, exact nanodollar totals, explicit zero-rating policy and an unauthenticated simulation gate.
+
+## November 16 extension
+
+Karan reported the “Outside this library” dead end on an Excel question and specified a hybrid AI question-answering engine, mandatory test questions and acceptance criteria. The coding agent investigated the root cause and selected the provider within his no-paid-dependency constraint. It implemented `ai/`, the server and UI changes, tests, the live verification script and documentation, and ran the live checks with a Gemini API key Karan supplied through the session's secret store. Owner review of the code and the live answers is pending.
+

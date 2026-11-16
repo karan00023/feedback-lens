@@ -1,0 +1,22 @@
+# One-click hosting of the Feedback Lens server (UI + AI API) on Render's free web-service plan.
+# After creating the service, add GEMINI_API_KEY in the Render dashboard (it is not stored here),
+# and set PUBLIC_HOSTS to the service's hostname, e.g. feedback-lens.onrender.com.
+services:
+  - type: web
+    name: feedback-lens
+    runtime: node
+    plan: free
+    buildCommand: "true"
+    startCommand: node server.mjs
+    healthCheckPath: /api/status
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PUBLIC_HOSTS
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://karan00023.github.io
+      - key: RATE_LIMIT_PER_MINUTE
+        value: "10"

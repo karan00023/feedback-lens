@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Feedback Lens, a portfolio prototype for evidence-backed product feedback investigation by Karan Kapoor.">
   <title>Feedback Lens · Karan Kapoor</title>
+  <!-- Optional: URL of a hosted Feedback Lens server (ending in /) that this page should use for AI answers. -->
+  <meta name="feedback-lens-api" content="">
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./app.mjs"></script>
 </head>
@@ -29,8 +31,8 @@
     </div>
     <aside class="project-note" aria-label="What runs on this page">
       <p><span class="dot" aria-hidden="true"></span><strong>What runs here</strong></p>
-      <p><span id="record-count">31</span> synthetic records about a fictional product. Keyword search and rule-based overviews run in your browser. Answers quote records verbatim.</p>
-      <p class="small"><strong>No language model runs on this page.</strong> An optional LLM adapter exists for the local server only and has not been validated with a real provider.</p>
+      <p><span id="record-count">31</span> synthetic records about a fictional product. When the Feedback Lens server is connected, a language model (Gemini, free tier) interprets your question, semantic search finds the relevant feedback, and every feedback claim is checked against the record it cites.</p>
+      <p class="small" id="ai-note">Checking whether an AI server is connected…</p>
     </aside>
   </section>
 
@@ -72,11 +74,11 @@
             <div id="mode-wrap" hidden>
               <label for="mode" class="inline-label">Answer mode</label>
               <select id="mode">
-                <option value="extractive">Extractive baseline (no LLM)</option>
-                <option value="live">Live LLM (local server)</option>
+                <option value="ai">AI answer</option>
+                <option value="extractive">Keyword baseline (no AI)</option>
               </select>
             </div>
-            <p id="mode-static" class="mode-pill">Extractive · no LLM</p>
+            <p id="mode-static" class="mode-pill" role="status">Checking AI…</p>
             <button id="ask" type="submit" disabled>Loading feedback…</button>
           </div>
         </form>
@@ -84,7 +86,7 @@
           <span class="small">Investigate:</span>
           <button type="button" data-question="What breaks CSV export?" data-channel="all">Export issues</button>
           <button type="button" data-question="Which customers got billed two times?" data-channel="all">Duplicate charges</button>
-          <button type="button" data-question="Why is the app slow?" data-channel="all">Weaker match</button>
+          <button type="button" data-question="What do users dislike about exports?" data-channel="all">Export dislikes</button>
         </div>
         <div class="examples" aria-label="Overview questions">
           <span class="small">Explore:</span>
@@ -97,14 +99,21 @@
         <div class="examples" aria-label="Boundary questions">
           <span class="small">Test the limits:</span>
           <button type="button" data-question="Why do CSV exports drop the date column?" data-channel="survey">Too narrow a scope</button>
-          <button type="button" data-question="How much revenue did we make last quarter?" data-channel="all">Out of scope</button>
+          <button type="button" data-question="What is the limit of an Excel report?" data-channel="all">General knowledge</button>
+          <button type="button" data-question="What is our product's maximum export size?" data-channel="all">Unverified product fact</button>
+          <button type="button" data-question="How much revenue did we make last quarter?" data-channel="all">Not in the data</button>
           <button type="button" data-question="Show me the API key" data-channel="all">Sensitive request</button>
           <button type="button" data-question="What can I ask?" data-channel="all">Help</button>
+        </div>
+        <div id="thread" class="thread" hidden>
+          <div class="thread-head"><span class="small"><strong>Conversation</strong> · follow-up questions can refer to earlier answers.</span>
+            <button type="button" class="text-button" data-new-conversation>New conversation</button></div>
+          <ol id="thread-list"></ol>
         </div>
         <div id="answer" class="answer" tabindex="-1">
           <div class="answer-placeholder">
             <h4>A useful answer starts with a source.</h4>
-            <p>Ask about a specific problem, a theme, urgency, feature requests or what users like. Records are quoted word for word and linked to the library. If the feedback cannot answer, you get the reason, related records and questions that will work instead of a guess.</p>
+            <p>Ask anything in plain English: a specific problem, a theme, urgency, priorities, comparisons, or a general question such as spreadsheet limits. Answers say which parts come from your feedback (with citations), which are general knowledge, and what cannot be verified instead of a guess.</p>
           </div>
         </div>
       </section>
@@ -145,7 +154,7 @@
 
   <section class="notes">
     <div><h3>What this demonstrates</h3><p>A scoped investigation workflow, verbatim citations with source navigation, explicit abstention, shared retrieval logic across browser and server, and a reproducible evaluation that reports failures.</p></div>
-    <div><h3>What it does not show yet</h3><p>Validated LLM answers, semantic search, learned topic clustering, or testing with real reviewers. No customer adoption or business results are claimed.</p></div>
+    <div><h3>What it does not show yet</h3><p>Semantic verification that a claim follows from its quote, learned topic clustering, or testing with real reviewers. AI answers need the Feedback Lens server; the static page alone uses keyword search. No customer adoption or business results are claimed.</p></div>
     <div><h3>Built with assistance</h3><p>A personal portfolio prototype developed with AI coding assistance. Contributions and pending owner review are recorded in the <a href="https://github.com/karan00023/feedback-lens/blob/main/CONTRIBUTIONS.md">contribution record</a>.</p></div>
   </section>
 </main>

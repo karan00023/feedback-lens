@@ -5,13 +5,44 @@
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {createServer} from '../../server.mjs';
+import {ProviderError} from '../../ai/provider.mjs';
+
+// Deterministic stand-in for the model so UI behaviour can be asserted exactly.
+function scriptedProvider() {
+  return {
+    name: 'scripted', model: 'scripted-model', embedModel: null,
+    async json({schemaName, user}) {
+      const input = JSON.parse(user);
+      const q = schemaName === 'question_understanding' ? input.question : input.original_question;
+      if (/rate limit/i.test(q)) throw new ProviderError('rate_limit', 'The free-tier model rate limit was reached. Try again in a minute.');
+      if (schemaName === 'question_understanding') {
+        const excel = /excel/i.test(q);
+        return {model: 'scripted-model', usage: null, data: {
+          intent: excel ? 'mixed' : 'feedback', aggregate: false, clarification: '',
+          standalone_question: /previous/i.test(q) ? 'What about the previous export issue?' : excel ? q : `${q.replace(/\?$/, '')} in Orbit?`,
+          search_queries: [excel ? 'export rows' : 'export csv'],
+        }};
+      }
+      const excel = /excel/i.test(q);
+      return {model: 'scripted-model', usage: {input_tokens: 1, output_tokens: 1}, data: {
+        answer_type: excel ? 'general_knowledge' : 'feedback_evidence',
+        headline: excel ? 'Excel worksheets hold up to 1,048,576 rows.' : 'Users dislike dropped columns in the previous export issue.',
+        feedback_points: excel ? [] : [{text: 'CSV exports drop the date column.', source_ids: ['FB-016'], quote: 'CSV export drops the date column'}],
+        general_knowledge: excel ? 'Excel 2007 and later: 1,048,576 rows by 16,384 columns.' : '',
+        unverified: excel ? "Orbit's own export limit is not documented." : '',
+        missing_information: '', follow_up_questions: ['What about the previous issue?'],
+      }};
+    },
+  };
+}
 
 const {chromium} = createRequire(import.meta.url)('playwright');
 
 let server;
 let base = process.env.BASE_URL;
 if (!base) {
-  server = createServer();
+  // Keyword-only server: the same behaviour as the static GitHub Pages copy.
+  server = createServer({provider: null, env: {}});
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   base = `http://127.0.0.1:${server.address().port}/`;
 }
@@ -39,9 +70,10 @@ try {
       await page.click('#ask');
       assert.equal(await page.locator('#question-error').isVisible(), true);
     });
-    await check(`${label}: an example produces a cited extractive answer`, async () => {
+    await check(`${label}: without an AI server the status says so and answers are keyword-based`, async () => {
+      assert.match(await text('#mode-static'), /Keyword search · AI not/);
       await page.click('text=Export issues');
-      assert.match(await text('#answer'), /Extractive · no LLM/i);
+      assert.match(await text('#answer'), /Keyword search · no AI/i);
       assert.equal(await page.locator('#answer .cite').count(), 1);
     });
     await check(`${label}: a citation reveals its record even when library filters hide it`, async () => {
@@ -68,9 +100,10 @@ try {
       assert.equal(await page.locator('#answer .cite').count(), 1);
     });
     await check(`${label}: an unsupported question abstains and explains why`, async () => {
-      await page.click('text=Out of scope');
+      await page.click('text=Not in the data');
       const answer = await text('#answer');
       assert.match(answer, /No feedback in all channels answers this/);
+      assert.match(answer, /AI answer mode can answer it/);
       assert.match(answer, /You could ask/);
       assert.equal(await page.locator('#answer .cite').count(), 0);
     });
@@ -109,6 +142,74 @@ try {
       assert.equal(await page.inputValue('#channel'), 'support');
     });
     await page.close();
+  }
+
+  // ---------- AI mode, with a scripted provider so the UI checks are deterministic ----------
+  const aiServer = createServer({provider: scriptedProvider(), index: null, env: {}});
+  await new Promise(resolve => aiServer.listen(0, '127.0.0.1', resolve));
+  const aiBase = `http://127.0.0.1:${aiServer.address().port}/`;
+  try {
+    for (const [label, viewport] of [['desktop', {width: 1280, height: 900}], ['mobile', {width: 390, height: 844}]]) {
+      const page = await browser.newPage({viewport});
+      const errors = [];
+      page.on('pageerror', e => errors.push(e.message));
+      await page.goto(aiBase, {waitUntil: 'networkidle'});
+      const text = async selector => (await page.locator(selector).innerText()).replace(/\s+/g, ' ');
+      await check(`${label} AI: status shows the model and mode selector`, async () => {
+        assert.match(await text('#mode-static'), /AI on · scripted-model/);
+        assert.equal(await page.locator('#mode-wrap').isVisible(), true);
+        assert.equal(await page.inputValue('#mode'), 'ai');
+      });
+      await check(`${label} AI: the Excel question gets labelled general knowledge, not a dead end`, async () => {
+        await page.fill('#question', 'What is the limit of an Excel report?');
+        await page.click('#ask');
+        await page.waitForSelector('#answer .headline');
+        const answer = await text('#answer');
+        assert.match(answer, /AI answer · scripted-model/i);
+        assert.match(answer, /General knowledge · not from your feedback/);
+        assert.match(answer, /1,048,576/);
+        assert.match(answer, /Not verified/);
+        assert.doesNotMatch(answer, /Outside this library|Not in the feedback/);
+      });
+      await check(`${label} AI: feedback claims cite records that open in the library`, async () => {
+        await page.fill('#question', 'What do users dislike about exports?');
+        await page.click('#ask');
+        await page.waitForFunction(() => document.querySelector('#answer').textContent.includes('From your feedback'));
+        assert.match(await text('#answer'), /Understood as/);
+        await page.click('#answer .cite >> nth=0');
+        assert.equal(await page.evaluate(() => document.activeElement.id), 'FB-016');
+      });
+      await check(`${label} AI: follow-ups keep the conversation`, async () => {
+        assert.equal(await page.locator('#thread').isVisible(), true);
+        assert.match(await text('#thread'), /What is the limit of an Excel report/);
+        await page.click('[data-followup] >> nth=0');
+        await page.waitForFunction(() => document.querySelector('#answer').textContent.includes('previous export'));
+        await page.click('[data-new-conversation]');
+        assert.equal(await page.locator('#thread').isVisible(), false);
+      });
+      await check(`${label} AI: a provider failure shows the reason and keyword results`, async () => {
+        await page.fill('#question', 'Trigger rate limit: what breaks CSV export?');
+        await page.click('#ask');
+        await page.waitForSelector('#answer .degraded');
+        assert.match(await text('#answer .degraded'), /rate limit/);
+        assert.ok(await page.locator('#answer .cite').count() >= 1);
+      });
+      await check(`${label} AI: a server error shows a retry`, async () => {
+        await page.route('**/api/answer', route => route.fulfill({status: 502, contentType: 'application/json', body: '{"error":"Answer unavailable. Try again shortly."}'}));
+        await page.fill('#question', 'Anything');
+        await page.click('#ask');
+        await page.waitForSelector('#answer .answer-error');
+        assert.match(await text('#answer'), /Try again shortly/);
+        await page.unroute('**/api/answer');
+      });
+      await check(`${label} AI: no horizontal scroll and no script errors`, async () => {
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true);
+        assert.deepEqual(errors, []);
+      });
+      await page.close();
+    }
+  } finally {
+    await new Promise(resolve => aiServer.close(resolve));
   }
 
   await check('failed data load shows a retry that recovers', async () => {
